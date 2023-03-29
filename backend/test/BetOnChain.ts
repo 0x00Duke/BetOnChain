@@ -100,23 +100,24 @@ describe("BetOnChain", () => {
                 expect(achievementRequirement.expertNumberOfBets).to.eq(EXPERT_NUMBER_OF_BETS)
             })
             it("Should revert if the player want to mint a achievement NFT and don't have the requirement", async () => {
-                await expect(bocContract.connect(player).mintBeginnerNft()).to.be.revertedWithCustomError(bocContract, "BetOnChain__RequirementsNotMet")
-                await expect(bocContract.connect(player).mintWarriorNft()).to.be.revertedWithCustomError(bocContract, "BetOnChain__RequirementsNotMet")
-                await expect(bocContract.connect(player).mintExpertNft()).to.be.revertedWithCustomError(bocContract, "BetOnChain__RequirementsNotMet")
+                await expect(bocContract.connect(player).mintAchievementNft(0)).to.be.revertedWithCustomError(bocContract, "BetOnChain__RequirementsNotMet")
+                await expect(bocContract.connect(player).mintAchievementNft(1)).to.be.revertedWithCustomError(bocContract, "BetOnChain__RequirementsNotMet")
+                await expect(bocContract.connect(player).mintAchievementNft(2)).to.be.revertedWithCustomError(bocContract, "BetOnChain__RequirementsNotMet")
             })
             it("Should be able to mint an achievement NFT if requirement are mets", async () => {
                 for (let i = 1; i <= EXPERT_NUMBER_OF_BETS; i++) {
                     const betTx = await bocContract.connect(player).bet(BET_AMOUNT, BET_FOR);
                     await betTx.wait();
                 }
-                await bocContract.connect(player).mintBeginnerNft();
-                await bocContract.connect(player).mintWarriorNft();
-                await bocContract.connect(player).mintExpertNft();
+                for (let i = 0; i <= 2; i++) {
+                    await bocContract.connect(player).mintAchievementNft(i);
+                }
                 expect(await bocNFTContract.ownerOf(6)).to.eq(player.address);
                 expect(await bocNFTContract.ownerOf(7)).to.eq(player.address);
                 expect(await bocNFTContract.ownerOf(8)).to.eq(player.address);
-
-              
+            })
+            it("Shoud not be able to mint a NFT with an achievement level that does not exist", async () => {
+                expect(bocContract.connect(player).mintAchievementNft(3)).to.be.revertedWithCustomError(bocContract, "BetOnChain__ThisAchievementDoesNotExist")
             })
         })
     })

@@ -7,6 +7,7 @@ import {BocNFT} from './BocNFT.sol';
 import {BocToken} from './BocToken.sol';
 
 error BetOnChain__RequirementsNotMet();
+error BetOnChain__ThisAchievementDoesNotExist();
 
 contract BetOnChain is Ownable {
 
@@ -53,25 +54,28 @@ contract BetOnChain is Ownable {
         numberOfBets[msg.sender] += 1;
     }
 
-    function mintBeginnerNft() external {
-        if (numberOfBets[msg.sender] < achievementRequirement.beginnerNumberOfBets) {
-            revert BetOnChain__RequirementsNotMet();
-        } 
-        bocNFT.safeMint(msg.sender, achievementURI.beginner);
-    }
-
-    function mintWarriorNft() external {
-        if (numberOfBets[msg.sender] < achievementRequirement.warriorNumberOfBets) {
-            revert BetOnChain__RequirementsNotMet();
-        } 
-        bocNFT.safeMint(msg.sender, achievementURI.warrior);
-    }
-
-      function mintExpertNft() external {
-        if (numberOfBets[msg.sender] < achievementRequirement.expertNumberOfBets) {
-            revert BetOnChain__RequirementsNotMet();
-        } 
-        bocNFT.safeMint(msg.sender, achievementURI.expert);
+    function mintAchievementNft(uint256 achievementLevelToMint) external {
+        if (achievementLevelToMint == 0) {
+            if (numberOfBets[msg.sender] < achievementRequirement.warriorNumberOfBets) {
+                revert BetOnChain__RequirementsNotMet();
+            } 
+            bocNFT.safeMint(msg.sender, achievementURI.beginner);
+        }
+        if (achievementLevelToMint == 1) {
+            if (numberOfBets[msg.sender] < achievementRequirement.warriorNumberOfBets) {
+                revert BetOnChain__RequirementsNotMet();
+            } 
+            bocNFT.safeMint(msg.sender, achievementURI.warrior);
+        }
+        if (achievementLevelToMint == 2) {
+            if (numberOfBets[msg.sender] < achievementRequirement.expertNumberOfBets) {
+                revert BetOnChain__RequirementsNotMet();
+            } 
+            bocNFT.safeMint(msg.sender, achievementURI.expert);
+        }
+        if (achievementLevelToMint > 2) {
+            revert BetOnChain__ThisAchievementDoesNotExist();
+        }
     }
 
     function setBetPositionURI(string memory _betPositionURI) external onlyOwner {
@@ -98,7 +102,7 @@ contract BetOnChain is Ownable {
         achievementRequirement.expertNumberOfBets = expertNumberOfBets;
     }
 
-    function getAchievementRequirement() view external returns(AchievementRequirement memory) {
+    function getAchievementRequirement() view public returns(AchievementRequirement memory) {
         return achievementRequirement;
     }
 
