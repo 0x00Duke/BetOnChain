@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.18;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 
 /**
  * @title The APIConsumer contract
  * @notice An API Consumer contract that makes GET requests to obtain 24h trading volume of ETH in USD
  */
-contract APIConsumer is ChainlinkClient {
+contract APIConsumer is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
     uint256 public volume;
@@ -25,8 +26,8 @@ contract APIConsumer is ChainlinkClient {
      * @param _fee - node operator price per API call / data request
      * @param _link - LINK token address on the corresponding network
      *
-     * Network: Sepolia
-     * Oracle: 0x6090149792dAAeE9D1D568c9f9a6F6B46AA29eFD
+     * Network: Goerli
+     * Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7
      * Job ID: ca98366cc7314957b8c012c72f05aeeb
      * Fee: 0.1 LINK
      */
@@ -35,13 +36,14 @@ contract APIConsumer is ChainlinkClient {
         bytes32 _jobId,
         uint256 _fee,
         address _link
-    ) {
+    ) ConfirmedOwner(msg.sender)  {
         if (_link == address(0)) {
             setPublicChainlinkToken();
         } else {
             setChainlinkToken(_link);
         }
         oracle = _oracle;
+        setChainlinkOracle(oracle);
         jobId = _jobId;
         fee = _fee;
     }
@@ -66,16 +68,6 @@ contract APIConsumer is ChainlinkClient {
         );
 
         // Set the path to find the desired data in the API response, where the response format is:
-        // {"RAW":
-        //   {"ETH":
-        //    {"USD":
-        //     {
-        //      "VOLUME24HOUR": xxx.xxx,
-        //     }
-        //    }
-        //   }
-        //  }
-        // request.add("path", "RAW.ETH.USD.VOLUME24HOUR"); // Chainlink nodes prior to 1.0.0 support this format
         request.add("path", "RAW,ETH,USD,VOLUME24HOUR"); // Chainlink nodes 1.0.0 and later support this format
 
         // Multiply the result by 1000000000000000000 to remove decimals
@@ -101,8 +93,13 @@ contract APIConsumer is ChainlinkClient {
     }
 
     /**
-     * @notice Witdraws LINK from the contract
-     * @dev Implement a withdraw function to avoid locking your LINK in the contract
-     */
-    function withdrawLink() external {}
+    * Allow withdraw of Link tokens from the contract
+    */
+    function withdrawLink() public onlyOwner {
+        LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
+        require(
+            link.transfer(msg.sender, link.balanceOf(address(this))),
+            "Unable to transfer"
+        );
+    }
 }

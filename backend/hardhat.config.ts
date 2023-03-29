@@ -1,5 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-toolbox"
 
 require("dotenv").config()
 
@@ -24,7 +24,16 @@ const config: HardhatUserConfig = {
       },
     ],
   },
+  defaultNetwork: "hardhat",
   networks: {
+    hardhat: {
+      forking: {
+        url: GOERLI_RPC_URL
+      }
+    },
+    localhost: {
+      chainId: 31337,
+    },
     goerli: {
       url: GOERLI_RPC_URL,
       accounts: [PRIVATE_KEY],
