@@ -24,36 +24,36 @@ contract APIConsumer is ChainlinkClient, ConfirmedOwner {
 
     event RequestVolume(bytes32 indexed requestId, uint256 volume);
 
-    /**
-     * @notice Executes once when a contract is created to initialize state variables
-     *
-     * @param _oracle - address of the specific Chainlink node that a contract makes an API call from
-     * @param _jobId - specific job for :_oracle: to run; each job is unique and returns different types of data
-     * @param _fee - node operator price per API call / data request
-     * @param _link - LINK token address on the corresponding network
-     *
-     * Network: Goerli
-     * Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7
-     * Job ID: ca98366cc7314957b8c012c72f05aeeb
-     * Fee: 0.1 LINK
-     */
-    constructor(
-        address _oracle,
-        bytes32 _jobId,
-        uint256 _fee,
-        address _link
-    ) ConfirmedOwner(msg.sender)  {
-        setChainlinkToken(_link);
-        setChainlinkOracle(_oracle);
-        jobId = _jobId;
-        fee = _fee;
-    }
-    // constructor() ConfirmedOwner(msg.sender) {
-    //     setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
-    //     setChainlinkOracle(0xCC79157eb46F5624204f47AB42b3906cAA40eaB7);
-    //     jobId = "ca98366cc7314957b8c012c72f05aeeb";
-    //     fee = (1 * LINK_DIVISIBILITY) / 10; // 0,1 * 10**18 (Varies by network and job)
+    // /**
+    //  * @notice Executes once when a contract is created to initialize state variables
+    //  *
+    //  * @param _oracle - address of the specific Chainlink node that a contract makes an API call from
+    //  * @param _jobId - specific job for :_oracle: to run; each job is unique and returns different types of data
+    //  * @param _fee - node operator price per API call / data request
+    //  * @param _link - LINK token address on the corresponding network
+    //  *
+    //  * Network: Goerli
+    //  * Oracle: 0xCC79157eb46F5624204f47AB42b3906cAA40eaB7
+    //  * Job ID: ca98366cc7314957b8c012c72f05aeeb
+    //  * Fee: 0.1 LINK
+    //  */
+    // constructor(
+    //     address _oracle,
+    //     bytes32 _jobId,
+    //     uint256 _fee,
+    //     address _link
+    // ) ConfirmedOwner(msg.sender)  {
+    //     setChainlinkToken(_link);
+    //     setChainlinkOracle(_oracle);
+    //     jobId = _jobId;
+    //     fee = _fee;
     // }
+    constructor() ConfirmedOwner(msg.sender) {
+        setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
+        setChainlinkOracle(0xCC79157eb46F5624204f47AB42b3906cAA40eaB7);
+        jobId = "ca98366cc7314957b8c012c72f05aeeb";
+        fee = (1 * LINK_DIVISIBILITY) / 10; // 0,1 * 10**18 (Varies by network and job)
+    }
 
     /**
      * Create a Chainlink request to retrieve API response, find the target
