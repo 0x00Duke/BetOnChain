@@ -69,8 +69,8 @@ const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers")
                       // we setup a promise so we can wait for our callback from the `once` function
                       await new Promise(async (resolve, reject) => {
                           // setup listener for our event
-                          apiConsumer.once("DataFullfilled", async () => {
-                              console.log("DataFullfilled event fired!")
+                          apiConsumer.once("RequestVolume", async () => {
+                              console.log("RequestVolume event fired!")
                               const volume = await apiConsumer.volume()
                               // assert throws an error if it fails, so we need to wrap
                               // it in a try/catch so that the promise returns event
