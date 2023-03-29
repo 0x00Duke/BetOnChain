@@ -30,7 +30,7 @@ const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers")
               const apiConsumerFactory = await ethers.getContractFactory("APIConsumer")
               const apiConsumer = await apiConsumerFactory
                   .connect(deployer)
-                  .deploy(mockOracle.address, jobId, fee, linkToken.address)
+                  .deploy(mockOracle.address, linkToken.address)
 
               const fundAmount = networkConfig[chainId]["fundAmount"] || "1000000000000000000"
               await linkToken.connect(deployer).transfer(apiConsumer.address, fundAmount)
