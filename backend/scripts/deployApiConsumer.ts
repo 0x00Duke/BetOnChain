@@ -1,6 +1,6 @@
 import { ethers } from "hardhat"
 import * as dotenv from 'dotenv';
-import { LinkToken__factory } from '../typechain-types';
+import { APIConsumer__factory, LinkToken__factory } from '../typechain-types';
 
 dotenv.config();
 
@@ -29,8 +29,8 @@ async function deployApiConsumer() {
     const oracleAddress = ethers.utils.getAddress("0xCC79157eb46F5624204f47AB42b3906cAA40eaB7");
 
     console.log("Deploying Contract");
-    const apiConsumerFactory = await ethers.getContractFactory("APIConsumer")
-    const apiConsumer = await apiConsumerFactory.deploy(oracleAddress, linkTokenAddress);
+    const apiContract = new APIConsumer__factory(signer);
+    const apiConsumer = await apiContract.deploy(oracleAddress, linkTokenAddress);
     const deployTxReceipt = await apiConsumer.deployTransaction.wait();
     console.log(
         `The API contract was deployed at the address ${deployTxReceipt.address}`
@@ -38,10 +38,10 @@ async function deployApiConsumer() {
       console.log({ deployTxReceipt });
    
     // auto-funding
-    const fundAmount = "1000000000000000000";
-    const contract = new LinkToken__factory(signer);
-    console.log(`Attaching to ballot contract at address ${linkTokenAddress} ...`)
-    const deployedLinkToken = contract.attach(linkTokenAddress);
+    const fundAmount = "1000000000000000000"; // Funding with 1 LINK
+    const tokenContract = new LinkToken__factory(signer);
+    console.log(`Attaching to LINK token contract at address ${linkTokenAddress} ...`)
+    const deployedLinkToken = tokenContract.attach(linkTokenAddress);
     console.log("Successfully attached")
     await deployedLinkToken.transfer(apiConsumer.address, fundAmount)
     console.log(`APIConsumer funded with ${fundAmount} JUELS`)

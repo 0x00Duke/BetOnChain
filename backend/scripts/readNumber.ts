@@ -13,19 +13,21 @@ async function readNumber() {
     const signer = wallet.connect(provider)
 
     // Once the contract is deployed, we can interact with it using the contract's address
-    const APICONTRACT_ADDRESS = ethers.utils.getAddress("0x2B32a272e89b22Aa71035B57C0339e99e49cB819");
+    const APICONTRACT_ADDRESS = ethers.utils.getAddress("0xE2b9E6fEcD4bc11226c1f8edEBD56fF075dA160F");
     const contract = new APIConsumer__factory(signer);
     const deployedApiContract = contract.attach(APICONTRACT_ADDRESS);
-    // const transaction = await deployedApiContract.requestVolumeData()
-    // const transactionReceipt = await transaction.wait(1)
-    // console.log(transactionReceipt)
-    // const requestId = transactionReceipt.events[0].topics[1]
-    const volume = await deployedApiContract.volume()
-    console.log(volume.toString())
-    
-    //await mockOracle.fulfillOracleRequest(requestId, numToBytes32(callbackValue))
-    // const volume = await apiConsumer.volume()
-    //console.log(volume.toString())
+    // First call volume before doing Oracle call
+    const volumeBefore = await deployedApiContract.volume()
+    console.log(`Ìnitial volume is ${volumeBefore.toString()}`)
+    // Now call the Oracle
+    console.log("Calling Oracle..")
+    const transaction = await deployedApiContract.requestVolumeData()
+    const transactionReceipt = await transaction.wait(1)
+    console.log(transactionReceipt)
+    const requestId = transactionReceipt.events[0].topics[1]
+    // Now call again (this almost never instantly returns the correct value)
+    const volumeAfter = await deployedApiContract.volume()
+    console.log(`Final volume is ${volumeAfter.toString()}`)
 }
 
 readNumber()
