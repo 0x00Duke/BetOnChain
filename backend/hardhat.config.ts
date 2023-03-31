@@ -1,20 +1,45 @@
-require('@nomicfoundation/hardhat-toolbox');
-require('dotenv').config()
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox"
 
-module.exports = {
-	solidity: "0.8.9",
-	networks: {
-		hardhat: {},
-		ETH_MAINNET: {
-			accounts: [`${process.env.PRIVATE_KEY}`],
-			url: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
-		},
-		ETH_GOERLI: {
-			accounts: [`${process.env.PRIVATE_KEY}`],
-			url: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
-		}
-	},
-	etherscan: {
-		apiKey: `${process.env.ETHERSCAN_API_KEY}`
-	}
-}
+require("dotenv").config()
+
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "********"
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
+const GOERLI_RPC_URL = "https://eth-goerli.alchemyapi.io/v2/" + ALCHEMY_API_KEY
+
+const config: HardhatUserConfig = {
+  solidity: {
+    compilers: [
+      {
+        version: '0.8.18',
+      },
+      {
+        version: '0.8.7',
+      },
+      {
+        version: '0.4.24',
+      },
+      {
+        version: '0.6.6',
+      },
+    ],
+  },
+  defaultNetwork: "hardhat",
+  networks: {
+    hardhat: {
+      forking: {
+        url: GOERLI_RPC_URL
+      }
+    },
+    localhost: {
+      chainId: 31337,
+    },
+    goerli: {
+      url: GOERLI_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 5,
+    },
+  },
+};
+
+export default config;
