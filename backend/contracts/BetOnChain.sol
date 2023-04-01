@@ -1,8 +1,7 @@
 //SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
-
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+pragma solidity ^0.8.0;
+import "@openzeppelin/contracts/access/Ownable.sol";
 import {BocNFT} from './BocNFT.sol';
 import {BocToken} from './BocToken.sol';
 
@@ -16,6 +15,13 @@ contract BetOnChain is Ownable {
         uint256 betAmount;
         uint256 betFor;
         uint256 nftId;
+    }
+
+    struct BetInfo{
+        uint256 betFor1;
+        uint256 betFor2;
+        bool betsOpen;
+        uint256 totalBetAmount;
     }
 
     struct AchievementURI {
@@ -33,23 +39,62 @@ contract BetOnChain is Ownable {
     string private betPositionURI; 
     AchievementURI private achievementURI;
     AchievementRequirement private achievementRequirement;
-    PlayerBetInfo[] public bets;
+    PlayerBetInfo[] public playerBets;
     BocNFT public bocNFT;
     BocToken public bocToken;
-    
+   
     mapping(address => uint) public numberOfBets;
+    mapping(uint256 => BetInfo) public bets; // Mapping to match ID with Bet 
 
     constructor(address bocTokenAddress) {
         bocNFT = new BocNFT();
         bocToken = BocToken(bocTokenAddress);
     }
 
+// MODIFIER ZONE 
+    modifier whenBetsClosed(uint256 betId) {
+        require(!bets[betId].betsOpen, "Bet is open");
+        _;
+    }
+
+     modifier whenBetsOpen(uint256 betId) {
+         require(bets[betId].betsOpen, "Bet is closed");
+        _;
+    }
+
+    modifier betForIsAvailable(uint256 betId, uint256 betFor){
+        require(bets[betId].betFor1 == betFor || bets[betId].betFor2 == betFor , "Betting for non-existent team");
+        _;
+    }
+
+    modifier teamsIdIsDifferent(uint256 betFor1, uint256 betFor2){
+        require(betFor1 != betFor2, "Both teams have same value");
+        _;
+    }
+
+// FUNCTION ZONE
+
+    function createBet(uint256 betId, uint256 betFor1, uint256 betFor2) external onlyOwner teamsIdIsDifferent(betFor1,betFor2){
+        BetInfo memory newBet = BetInfo(betFor1,betFor2,false,0);
+        bets[betId]= newBet;
+    }  
+
+    function openBets(uint256 betId) external onlyOwner whenBetsClosed(betId) {
+        bets[betId].betsOpen = true;
+    }
+
+    function closeBet(uint256 betId ) external onlyOwner whenBetsOpen(betId){
+        bets[betId].betsOpen = false;
+    }
+
 // Need to review this function to get it fully functionnal with a bet
-    function bet(uint256 betAmount, uint256 betFor) external {
+
+    function bet(uint256 betAmount, uint256 betFor,uint256 betId) external whenBetsOpen(betId) betForIsAvailable(betId,betFor){
         bocToken.transferFrom(msg.sender, address(this), betAmount);
         uint256 nftId = bocNFT.getCurrentId();
         PlayerBetInfo memory myBet = PlayerBetInfo(msg.sender, betAmount, betFor, nftId);
-        bets.push(myBet);
+        playerBets.push(myBet);
+        bets[betId].totalBetAmount += betAmount; 
         _mintBetPosition();
         numberOfBets[msg.sender] += 1;
     }

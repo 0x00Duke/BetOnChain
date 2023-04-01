@@ -1,6 +1,6 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
-import { ethers } from 'hardhat'
-import { BigNumber, Contract } from 'ethers'
+import { ethers } from 'hardhat';
+import { BigNumber, Contract } from 'ethers';
 import { expect } from 'chai';
 
 const BET_POSITION_URI = 'ipfs://test-bet-position-URI';
@@ -15,9 +15,12 @@ const BET_FOR = 1;
 const INITIAL_TOKEN_AMOUNT = ethers.utils.parseUnits("1000000", 18);
 const INITIAL_ETH_FUNDING = ethers.utils.parseEther("100");
 const ETH_AMOUNT_TO_EXCHANGE = ethers.utils.parseEther("1");
+const BET_FOR1 = 1;
+const BET_FOR2 = 2;
+const BET_ID = 0;
+
 
 describe("BetOnChain", () => {
-
     let deployer: SignerWithAddress;
     let player: SignerWithAddress;
     let bocContract: Contract;
@@ -50,10 +53,16 @@ describe("BetOnChain", () => {
         beforeEach(async () => {
             const setBetURI = await bocContract.setBetPositionURI(BET_POSITION_URI);
             await setBetURI.wait();
-            bocContractTokenBalanceBefore = await bocTokenContract.balanceOf(bocContract.address)
+            bocContractTokenBalanceBefore = await bocTokenContract.balanceOf(bocContract.address);
             const approveTokenTx = await bocTokenContract.connect(player).approve(bocContract.address, ethers.constants.MaxUint256);
             await approveTokenTx.wait();
-            const betTx = await bocContract.connect(player).bet(BET_AMOUNT, BET_FOR);
+            
+            const createBetTx = await bocContract.connect(deployer).createBet(BET_ID,BET_FOR1,BET_FOR2);
+            await createBetTx.wait();
+            const openBetTX = await bocContract.connect(deployer).openBets(BET_ID);
+            await openBetTX.wait();
+            
+            const betTx = await bocContract.connect(player).bet(BET_AMOUNT, BET_FOR,BET_ID);
             await betTx.wait();
             const achievementRequirementTx = await bocContract.setAchievementRequirement(BEGINNER_NUMBER_OF_BETS, WARRIOR_NUMBER_OF_BETS, EXPERT_NUMBER_OF_BETS);
             achievementRequirementTx.wait();
@@ -69,7 +78,7 @@ describe("BetOnChain", () => {
                 expect(nftOwner).to.eq(player.address)
             })
             it("Should set the struct for this player bet", async () => {
-                const playerBetInfo = await bocContract.bets(0);
+                const playerBetInfo = await bocContract.playerBets(0);
                 expect(playerBetInfo.player).to.eq(player.address);
                 expect(playerBetInfo.betAmount).to.eq(BET_AMOUNT);
                 expect(playerBetInfo.betFor).to.eq(BET_FOR);
@@ -106,7 +115,7 @@ describe("BetOnChain", () => {
             })
             it("Should be able to mint an achievement NFT if requirement are mets", async () => {
                 for (let i = 1; i <= EXPERT_NUMBER_OF_BETS; i++) {
-                    const betTx = await bocContract.connect(player).bet(BET_AMOUNT, BET_FOR);
+                    const betTx = await bocContract.connect(player).bet(BET_AMOUNT, BET_FOR,BET_ID);
                     await betTx.wait();
                 }
                 for (let i = 0; i <= 2; i++) {
@@ -123,4 +132,4 @@ describe("BetOnChain", () => {
     })
 
 
-}) 
+})
