@@ -1,0 +1,38 @@
+type = "directrequest"
+schemaVersion = 1
+name = "cob-demo-job2" 
+maxTaskDuration = "0s"
+contractAddress = "0xb603fb591EcfeDd6C18EF539fc1fA8d8F7Ae05E5"  
+minContractPaymentLinkJuels = "0"
+observationSource = """
+    decode_log   [type="ethabidecodelog"
+                  abi="OracleRequest(bytes32 indexed specId, address requester, bytes32 requestId, uint256 payment, address callbackAddr, bytes4 callbackFunctionId, uint256 cancelExpiration, uint256 dataVersion, bytes data)"
+                  data="$(jobRun.logData)"
+                  topics="$(jobRun.logTopics)"]
+    decode_cbor  [type="cborparse" data="$(decode_log.data)"]
+    decode_log -> decode_cbor
+    decode_cbor -> fetch
+    fetch       [type=bridge name="ea-bridge" requestData="{\\"id\\": $(jobSpec.externalJobID), \\"data\\": { \\"fixtureId\\": $(decode_cbor.fixtureId)}}"]
+    homeGoal_parse        [type=jsonparse path="data,homeGoal" data="$(fetch)"]
+    fetch -> homeGoal_parse
+    awayGoal_parse        [type=jsonparse path="data,awayGoal" data="$(fetch)"]
+    fetch -> awayGoal_parse
+    matchName_parse        [type=jsonparse path="data,matchName" data="$(fetch)"]
+    fetch -> matchName_parse
+    winner_parse  [type=jsonparse path="data,winner" data="$(fetch)"]
+    fetch -> winner_parse
+    homeGoal_parse -> encode_mwr
+    awayGoal_parse -> encode_mwr
+    matchName_parse -> encode_mwr
+    winner_parse -> encode_mwr
+    encode_mwr  [type="ethabiencode"
+                 abi="(bytes32 requestId, uint256 _homeGoal, uint256 _awayGoal, string _matchName, uint256 _fixtureId, uint256 _winner)" 
+                 data="{\\"requestId\\": $(decode_log.requestId), \\"_homeGoal\\": $(homeGoal_parse), \\"_awayGoal\\": $(awayGoal_parse), \\"_matchName\\": $(matchName_parse), \\"_fixtureId\\": $(decode_cbor.fixtureId), \\"_winner\\": $(winner_parse)}"
+                ]
+    encode_tx   [type="ethabiencode"
+                  abi="fulfillOracleRequest2(bytes32 requestId, uint256 payment, address callbackAddress, bytes4 callbackFunctionId, uint256 expiration, bytes calldata data)"
+                  data="{\\"requestId\\": $(decode_log.requestId), \\"payment\\": $(decode_log.payment), \\"callbackAddress\\": $(decode_log.callbackAddr), \\"callbackFunctionId\\": $(decode_log.callbackFunctionId), \\"expiration\\": $(decode_log.cancelExpiration), \\"data\\": $(encode_mwr)}"
+                ]
+    submit_tx    [type="ethtx" to="0xb603fb591EcfeDd6C18EF539fc1fA8d8F7Ae05E5" data="$(encode_tx)"]
+    encode_mwr -> encode_tx -> submit_tx
+"""
