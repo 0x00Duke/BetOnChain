@@ -18,8 +18,8 @@ const ETH_AMOUNT_TO_EXCHANGE = ethers.utils.parseEther("1");
 const BET_FOR1 = 1;
 const BET_FOR2 = 2;
 const BET_ID = 0;
-const BET_ODDS_1=ethers.utils.parseEther("0.8");
-const BET_ODDS_2= ethers.utils.parseEther("1.2");
+const BET_ODDS_1=ethers.utils.parseEther("1.2");
+const BET_ODDS_2= ethers.utils.parseEther("0.8");
 
 describe("BetOnChain", () => {
     let deployer: SignerWithAddress;
@@ -60,7 +60,7 @@ describe("BetOnChain", () => {
             
             const createBetTx = await bocContract.connect(deployer).createBet(BET_ID,BET_FOR1,BET_FOR2,BET_ODDS_1,BET_ODDS_2);
             await createBetTx.wait();
-            const openBetTX = await bocContract.connect(deployer).openBets(BET_ID);
+            const openBetTX = await bocContract.connect(deployer).openBet(BET_ID);
             await openBetTX.wait();
             
             const betTx = await bocContract.connect(player).bet(BET_AMOUNT, BET_FOR,BET_ID);
@@ -91,6 +91,14 @@ describe("BetOnChain", () => {
             })
             it("Should update the number of bets made by this address", async () => {
                 expect(await bocContract.numberOfBets(player.address)).to.eq(1);
+            })
+            it("Should close the bet ",async ()=>{
+                const closeBetTX = await bocContract.connect(deployer).closeBet(BET_ID);
+                await closeBetTX.wait();
+                const betInfo = await bocContract.bets(BET_ID);
+                expect(betInfo.betsOpen).to.eq(false);
+            })
+            it("Should withdraw correctly",async()=>{
             })
         })
 

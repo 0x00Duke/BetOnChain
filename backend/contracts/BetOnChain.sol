@@ -48,6 +48,7 @@ contract BetOnChain is Ownable {
     mapping(address => uint) public numberOfBets;
     mapping(uint256 => BetInfo) public bets; // Mapping to match ID with Bet 
     mapping(address=> mapping (uint256=> PlayerBetInfo)) public addressToBetToPlayer;
+    mapping(uint256 => uint256) oddsToTeams;
 
     constructor(address bocTokenAddress) {
         bocNFT = new BocNFT();
@@ -69,10 +70,12 @@ contract BetOnChain is Ownable {
 
     function createBet(uint256 betId, uint256 betFor1, uint256 betFor2,uint256 oddsfor1, uint256 oddsfor2) external onlyOwner{
         BetInfo memory newBet = BetInfo(betFor1,betFor2,oddsfor1, oddsfor2,false,0);
+        oddsToTeams[betFor1]= oddsfor1;
+        oddsToTeams[betFor2]= oddsfor2;
         bets[betId]= newBet;
     }  
 // Manually open and close bets
-    function openBets(uint256 betId) external onlyOwner whenBetsClosed(betId) {
+    function openBet(uint256 betId) external onlyOwner whenBetsClosed(betId) {
         bets[betId].betsOpen = true;
     }
 
@@ -82,9 +85,9 @@ contract BetOnChain is Ownable {
 
 // Withdraw Price:
     function withdrawPrize(uint256 betId) external whenBetsClosed(betId){
-        require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not make a bet");
-        // Calculate how much to transfer to thius user
-        // Need odds 
+        require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not made a bet");
+        uint256 totalPrize= ((uint256(addressToBetToPlayer[msg.sender][betId].betAmount*1e18)*uint256(oddsToTeams[addressToBetToPlayer[msg.sender][betId].betFor]*1e18))/1e18);
+        bocToken.transferFrom(address(this),msg.sender, totalPrize);
     }
 
 // Need to review this function to get it fully functionnal with a bet
