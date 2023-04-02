@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {BocNFT} from './BocNFT.sol';
 import {BocToken} from './BocToken.sol';
+import "https://github.com/CementDAO/Fixidity/blob/master/contracts/FixidityLib.sol";
 
 error BetOnChain__RequirementsNotMet();
 error BetOnChain__ThisAchievementDoesNotExist();
@@ -86,9 +87,11 @@ contract BetOnChain is Ownable {
 // Withdraw Price:
     function withdrawPrize(uint256 betId) external whenBetsClosed(betId){
         require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not made a bet");
-        uint256 totalPrize= ((uint256(addressToBetToPlayer[msg.sender][betId].betAmount*1e18)*uint256(oddsToTeams[addressToBetToPlayer[msg.sender][betId].betFor]*1e18))/1e18);
-        bocToken.transferFrom(address(this),msg.sender, totalPrize);
+       // Import lib for safe math mul and div (not precise in solidity)
+       //  uint256 totalPrize= uint256(addressToBetToPlayer[msg.sender][betId].betAmount)*uint256(oddsToTeams[addressToBetToPlayer[msg.sender][betId].betFor]);
+       // bocToken.transferFrom(address(this),msg.sender, totalPrize);
     }
+
 
 // Need to review this function to get it fully functionnal with a bet
 
