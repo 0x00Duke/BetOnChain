@@ -20,6 +20,8 @@ contract BetOnChain is Ownable {
     struct BetInfo{
         uint256 betFor1;
         uint256 betFor2;
+        uint256 oddsfor1;
+        uint256 oddsfor2;
         bool betsOpen;
         uint256 totalBetAmount;
     }
@@ -45,6 +47,7 @@ contract BetOnChain is Ownable {
    
     mapping(address => uint) public numberOfBets;
     mapping(uint256 => BetInfo) public bets; // Mapping to match ID with Bet 
+    mapping(address=> mapping (uint256=> PlayerBetInfo)) public addressToBetToPlayer;
 
     constructor(address bocTokenAddress) {
         bocNFT = new BocNFT();
@@ -62,23 +65,14 @@ contract BetOnChain is Ownable {
         _;
     }
 
-    modifier betForIsAvailable(uint256 betId, uint256 betFor){
-        require(bets[betId].betFor1 == betFor || bets[betId].betFor2 == betFor , "Betting for non-existent team");
-        _;
-    }
-
-    modifier teamsIdIsDifferent(uint256 betFor1, uint256 betFor2){
-        require(betFor1 != betFor2, "Both teams have same value");
-        _;
-    }
-
 // FUNCTION ZONE
 
-    function createBet(uint256 betId, uint256 betFor1, uint256 betFor2) external onlyOwner teamsIdIsDifferent(betFor1,betFor2){
-        BetInfo memory newBet = BetInfo(betFor1,betFor2,false,0);
+    function createBet(uint256 betId, uint256 betFor1, uint256 betFor2,uint256 oddsfor1, uint256 oddsfor2) external onlyOwner{
+        BetInfo memory newBet = BetInfo(betFor1,betFor2,oddsfor1, oddsfor2,false,0);
         bets[betId]= newBet;
     }  
 
+// Manually open and close bets
     function openBets(uint256 betId) external onlyOwner whenBetsClosed(betId) {
         bets[betId].betsOpen = true;
     }
@@ -87,14 +81,22 @@ contract BetOnChain is Ownable {
         bets[betId].betsOpen = false;
     }
 
+// Withdraw Price:
+    function withdrawPrice(uint256 betId) external whenBetsClosed(betId){
+        require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not make a bet");
+        // Calculate how much to transfer to thius user
+        // Need odds 
+    }
+
 // Need to review this function to get it fully functionnal with a bet
 
-    function bet(uint256 betAmount, uint256 betFor,uint256 betId) external whenBetsOpen(betId) betForIsAvailable(betId,betFor){
+    function bet(uint256 betAmount, uint256 betFor,uint256 betId) external whenBetsOpen(betId){
         bocToken.transferFrom(msg.sender, address(this), betAmount);
         uint256 nftId = bocNFT.getCurrentId();
         PlayerBetInfo memory myBet = PlayerBetInfo(msg.sender, betAmount, betFor, nftId);
         playerBets.push(myBet);
         bets[betId].totalBetAmount += betAmount; 
+        addressToBetToPlayer[msg.sender][betId] = myBet;
         _mintBetPosition();
         numberOfBets[msg.sender] += 1;
     }

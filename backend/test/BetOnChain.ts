@@ -18,7 +18,8 @@ const ETH_AMOUNT_TO_EXCHANGE = ethers.utils.parseEther("1");
 const BET_FOR1 = 1;
 const BET_FOR2 = 2;
 const BET_ID = 0;
-
+const BET_ODDS_1=ethers.utils.parseEther("0.8");
+const BET_ODDS_2= ethers.utils.parseEther("1.2");
 
 describe("BetOnChain", () => {
     let deployer: SignerWithAddress;
@@ -57,7 +58,7 @@ describe("BetOnChain", () => {
             const approveTokenTx = await bocTokenContract.connect(player).approve(bocContract.address, ethers.constants.MaxUint256);
             await approveTokenTx.wait();
             
-            const createBetTx = await bocContract.connect(deployer).createBet(BET_ID,BET_FOR1,BET_FOR2);
+            const createBetTx = await bocContract.connect(deployer).createBet(BET_ID,BET_FOR1,BET_FOR2,BET_ODDS_1,BET_ODDS_2);
             await createBetTx.wait();
             const openBetTX = await bocContract.connect(deployer).openBets(BET_ID);
             await openBetTX.wait();
