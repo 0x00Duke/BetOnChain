@@ -71,7 +71,6 @@ contract BetOnChain is Ownable {
         BetInfo memory newBet = BetInfo(betFor1,betFor2,oddsfor1, oddsfor2,false,0);
         bets[betId]= newBet;
     }  
-
 // Manually open and close bets
     function openBets(uint256 betId) external onlyOwner whenBetsClosed(betId) {
         bets[betId].betsOpen = true;
@@ -82,7 +81,7 @@ contract BetOnChain is Ownable {
     }
 
 // Withdraw Price:
-    function withdrawPrice(uint256 betId) external whenBetsClosed(betId){
+    function withdrawPrize(uint256 betId) external whenBetsClosed(betId){
         require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not make a bet");
         // Calculate how much to transfer to thius user
         // Need odds 
