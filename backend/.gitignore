@@ -68,6 +68,14 @@ flattened.sol
 # Tenderly fork deployment directory
 deployments_tenderly
 
+# Lock files
+package-lock.json
+yarn.lock
+
+templates/evm/core/pages/api
+
+artifacts/
+=======
 # Miscellaneous files
 bin
 out
