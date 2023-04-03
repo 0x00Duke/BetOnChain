@@ -110,7 +110,7 @@ contract BetOnChain is Ownable {
             revert BetOnChain__YouBetIsNotAWinningBet();
         }
         _burnNft(betId);
-        uint256 prizeAmount = _calculatePrizeToWithdraw(betId, 1);
+        uint256 prizeAmount = _calculatePrizeToWithdraw(betId, winner);
         bocToken.transfer(msg.sender, prizeAmount);
     }
 
