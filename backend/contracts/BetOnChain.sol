@@ -1,10 +1,10 @@
 //SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
-
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+pragma solidity ^0.8.0;
+import "@openzeppelin/contracts/access/Ownable.sol";
 import {BocNFT} from './BocNFT.sol';
 import {BocToken} from './BocToken.sol';
+import "https://github.com/CementDAO/Fixidity/blob/master/contracts/FixidityLib.sol";
 
 error BetOnChain__RequirementsNotMet();
 error BetOnChain__ThisAchievementDoesNotExist();
@@ -16,6 +16,15 @@ contract BetOnChain is Ownable {
         uint256 betAmount;
         uint256 betFor;
         uint256 nftId;
+    }
+
+    struct BetInfo{
+        uint256 betFor1;
+        uint256 betFor2;
+        uint256 oddsfor1;
+        uint256 oddsfor2;
+        bool betsOpen;
+        uint256 totalBetAmount;
     }
 
     struct AchievementURI {
@@ -33,23 +42,66 @@ contract BetOnChain is Ownable {
     string private betPositionURI; 
     AchievementURI private achievementURI;
     AchievementRequirement private achievementRequirement;
-    PlayerBetInfo[] public bets;
+    PlayerBetInfo[] public playerBets;
     BocNFT public bocNFT;
     BocToken public bocToken;
-    
+   
     mapping(address => uint) public numberOfBets;
+    mapping(uint256 => BetInfo) public bets; // Mapping to match ID with Bet 
+    mapping(address=> mapping (uint256=> PlayerBetInfo)) public addressToBetToPlayer;
+    mapping(uint256 => uint256) oddsToTeams;
 
     constructor(address bocTokenAddress) {
         bocNFT = new BocNFT();
         bocToken = BocToken(bocTokenAddress);
     }
 
+// MODIFIER ZONE 
+    modifier whenBetsClosed(uint256 betId) {
+        require(!bets[betId].betsOpen, "Bet is open");
+        _;
+    }
+
+     modifier whenBetsOpen(uint256 betId) {
+         require(bets[betId].betsOpen, "Bet is closed");
+        _;
+    }
+
+// FUNCTION ZONE
+
+    function createBet(uint256 betId, uint256 betFor1, uint256 betFor2,uint256 oddsfor1, uint256 oddsfor2) external onlyOwner{
+        BetInfo memory newBet = BetInfo(betFor1,betFor2,oddsfor1, oddsfor2,false,0);
+        oddsToTeams[betFor1]= oddsfor1;
+        oddsToTeams[betFor2]= oddsfor2;
+        bets[betId]= newBet;
+    }  
+// Manually open and close bets
+    function openBet(uint256 betId) external onlyOwner whenBetsClosed(betId) {
+        bets[betId].betsOpen = true;
+    }
+
+    function closeBet(uint256 betId ) external onlyOwner whenBetsOpen(betId){
+        bets[betId].betsOpen = false;
+    }
+
+// Withdraw Price:
+    function withdrawPrize(uint256 betId) external whenBetsClosed(betId){
+        require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not made a bet");
+       // Import lib for safe math mul and div (not precise in solidity)
+       //  uint256 totalPrize= uint256(addressToBetToPlayer[msg.sender][betId].betAmount)*uint256(oddsToTeams[addressToBetToPlayer[msg.sender][betId].betFor]);
+       // bocToken.transferFrom(address(this),msg.sender, totalPrize);
+    }
+
+
 // Need to review this function to get it fully functionnal with a bet
-    function bet(uint256 betAmount, uint256 betFor) external {
+
+    function bet(uint256 betAmount, uint256 betFor,uint256 betId) external whenBetsOpen(betId){
         bocToken.transferFrom(msg.sender, address(this), betAmount);
         uint256 nftId = bocNFT.getCurrentId();
         PlayerBetInfo memory myBet = PlayerBetInfo(msg.sender, betAmount, betFor, nftId);
-        bets.push(myBet);
+        playerBets.push(myBet);
+        bets[betId].totalBetAmount += betAmount; 
+        addressToBetToPlayer[msg.sender][betId] = myBet;
         _mintBetPosition();
         numberOfBets[msg.sender] += 1;
     }
