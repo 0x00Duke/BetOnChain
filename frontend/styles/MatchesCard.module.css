@@ -1,0 +1,110 @@
+.matchesCard {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 13px rgba(0, 0, 0, 0.1);
+  height: 380px;
+}
+
+.matchesCard .matchesCardTitle {
+  display: flex;
+  padding: 10px 5px;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.matchesCard .matchesCardTitle .icons {
+  display: flex;
+  gap: 3px;
+}
+
+.matchesCard .matchesCardTitle .icons .icon {
+  background: #f1f1f1;
+  border-radius: 4px;
+  color: #8f8f8f;
+  box-shadow: 1px 3px 3px #d4d4d4;
+  cursor: pointer;
+}
+
+.matchesCard .matchesCardTitle .icons .icon:hover {
+  box-shadow: none;
+}
+
+.matchesCard .matchesCardBody {
+  padding: 10px 5px;
+  overflow-y: scroll;
+}
+
+.matchesCard .matchesCardBody::-webkit-scrollbar {
+  background-color: transparent;
+  width: 7px;
+  height: 5px;
+}
+
+.matchesCard .matchesCardBody::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.7);
+  border-radius: 5px;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem {
+  display: grid;
+  border: 1px solid #f1f1f1;
+  padding: 10px 5px;
+  border-radius: 5px;
+  grid-template-columns: 15% auto 15%;
+  cursor: pointer;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem.active {
+  background: #f1f1f1;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .teamCard {
+  display: grid;
+  row-gap: 5px;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .teamCard .team {
+  font-weight: 600;
+  display: grid;
+  grid-template-columns: 50% auto 10%;
+  font-size: 14px;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .teamCard .team .teamLogo {
+  display: grid;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .teamCard .team .teamLogo .logo {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .teamCard .team .teamName {
+  display: flex;
+  align-items: center;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .status {
+  font-size: small;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .chart {
+  display: flex;
+  font-size: 12px;
+  gap: 3px;
+  font-weight: 500;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .chart .nm {
+  display: grid;
+  place-items: center;
+}
+
+.matchesCard .matchesCardBody .matchesCardItem .chart .aggregate {
+  display: grid;
+}

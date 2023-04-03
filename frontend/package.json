@@ -1,5 +1,5 @@
 {
-	"name": "BetOnChain",
+	"name": "Bet On Chain",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -10,11 +10,20 @@
 		"marketplace": "npx create-web3-dapp marketplace"
 	},
 	"dependencies": {
+		"@emotion/react": "^11.10.6",
+		"@emotion/styled": "^11.10.6",
+		"@mui/icons-material": "^5.11.11",
+		"@mui/lab": "^5.0.0-alpha.124",
+		"@mui/material": "^5.11.15",
+		"@rainbow-me/rainbowkit": "^0.12.4",
+		"@reduxjs/toolkit": "^1.9.3",
+		"alchemy-sdk": "^2.6.2",
+		"moment": "^2.29.4",
 		"next": "13.1.2",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"alchemy-sdk": "^2.6.2",
-		"@rainbow-me/rainbowkit": "^0.12.4",
+		"react-redux": "^8.0.5",
+		"sass": "^1.60.0",
 		"wagmi": "^0.12.6"
 	},
 	"devDependencies": {

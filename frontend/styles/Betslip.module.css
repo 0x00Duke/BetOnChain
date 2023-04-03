@@ -1,0 +1,258 @@
+.toggleQueries {
+  transition: 0.3s;
+}
+
+@media screen and (max-width: 1024px) {
+  .toggleQueries {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    place-items: center;
+  }
+
+  .toggleQueries.open {
+    display: grid;
+  }
+}
+
+.toggleQueries .toggleCard {
+  width: 95%;
+}
+
+.toggleQueries .bettingSlip .goDown {
+  display: none;
+}
+
+@media screen and (max-width: 1024px) {
+  .toggleQueries .bettingSlip .goDown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    cursor: pointer;
+  }
+}
+
+.toggleQueries .bettingSlip .goDown .icon {
+  font-size: 20px;
+}
+
+.toggleQueries .bettingSlip .css-heg063-MuiTabs-flexContainer,
+.toggleQueries .bettingSlip .MuiTabs-flexContainer {
+  justify-content: space-around;
+}
+
+.toggleQueries .bettingSlip .css-heg063-MuiTabs-flexContainer .MuiTab-textColorPrimary.Mui-selected,
+.toggleQueries .bettingSlip .MuiTabs-flexContainer .MuiTab-textColorPrimary.Mui-selected {
+  color: #0000b2 !important;
+}
+
+.toggleQueries .bettingSlip .css-13xfq8m-MuiTabPanel-root,
+.toggleQueries .bettingSlip .css-19kzrtu {
+  padding: 24px 1px !important;
+}
+
+.toggleQueries .bettingSlip .bets {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList {
+  background-color: #0000b2;
+  color: white;
+  display: grid;
+  grid-template-columns: 15% auto 15%;
+  font-size: 14px;
+  border-radius: 10px;
+  transition: 0.5s;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .removeButton {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .removeButton .icon {
+  color: #f1f1f1;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .game {
+  padding: 5px;
+  display: grid;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .game .type {
+  color: #eee;
+  padding: 2px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .game .type .icon {
+  font-size: 16px;
+  font-size: bold;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .game .competition {
+  font-size: 13px;
+  padding: 2px;
+  font-weight: 500;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .game .market {
+  font-size: 13px;
+  padding: 2px;
+  font-weight: 500;
+  color: #eee;
+}
+
+.toggleQueries .bettingSlip .bets .bettingList .odd {
+  display: grid;
+  padding-top: 5px;
+  font-weight: 600;
+  color: gold;
+}
+
+.toggleQueries .bettingSlip .totalling {
+  display: grid;
+  box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+}
+
+.toggleQueries .bettingSlip .totalling .tto {
+  display: flex;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggleQueries .bettingSlip .totalling .tto input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.toggleQueries .bettingSlip .totalling .tto.win {
+  background-color: rgba(0, 0, 178, 0.1);
+  border-radius: 5px;
+}
+
+.toggleQueries .bettingSlip .totalling .placeBet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.toggleQueries .bettingSlip .totalling .placeBet button {
+  outline: none;
+  border: none;
+  background-color: #0000b2;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 41px;
+  box-shadow: 0 7px 10px rgba(0, 0, 0, .1);
+}
+
+.toggleQueries .bettingSlip .totalling .placeBet button:hover {
+  background-color: gold;
+  animation-name: wobble;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+}
+
+.toggleQueries .bettingSlip .lac {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.toggleQueries .bettingSlip .lac input {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  outline: none;
+  width: 100%;
+  height: 50px;
+  font-size: 14px;
+}
+
+.toggleQueries .bettingSlip .lac button {
+  margin-top: 30px;
+  outline: none;
+  border: none;
+  background-color: #0000b2;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 41px;
+  box-shadow: 0 7px 10px rgba(0, 0, 0, .1);
+}
+
+.toggleQueries .bettingSlip .lac button:hover {
+  background-color: gold;
+  animation-name: wobble;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+}
+
+.floatingButton {
+  display: none;
+  cursor: pointer;
+  box-shadow: 0 8px 13px rgba(0, 0, 0, .1);
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  font-size: small;
+  z-index: 999;
+  font-weight: 500;
+}
+
+.floatingButton .betCount {
+  background-color: #0000b2;
+  color: gold;
+  display: grid;
+  font-size: medium;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 600;
+  width: 25px;
+  height: 25px;
+}
+
+@media screen and (max-width: 1024px) {
+  .floatingButton {
+    right: 0;
+    bottom: 15%;
+  }
+}

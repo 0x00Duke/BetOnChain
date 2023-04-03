@@ -1,0 +1,310 @@
+.card {
+  background: white;
+  padding : 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 13px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 1024px) {
+  .card {
+    padding: 5px;
+  }
+}
+
+.card .cardTitle {
+  display: flex;
+  border-bottom: 1px solid #f1f1f1;
+  padding: 10px 5px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card .cardTitle .cardTitleLive {
+  font-size: 13px;
+  display: flex;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+  align-items: center;
+  cursor: pointer;
+}
+
+.card .cardTitle .cardTitleLive.off {
+  color: gray;
+  background-color: #eee;
+}
+
+.card .cardTitle .cardTitleLive.off .icon {
+  color: gray;
+}
+
+.card .cardTitle .cardTitleLive.on {
+  color: red;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.card .cardTitle .cardTitleLive.on .icon {
+  color: red;
+  animation: pulse 1s infinite;
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardTitle .cardTitleLive {
+    font-size: 11px;
+  }
+}
+
+.card .cardTitle .cardTitleLive .icon {
+  font-size: 13px;
+  transition: 0.3s;
+}
+
+.card .cardTitle .cardTitleText {
+  font-weight: 600;
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardTitle .cardTitleText {
+    font-size: 14px;
+  }
+}
+
+.card .cardTitle .cardTitleIcons {
+  display: flex;
+  gap: 10px;
+}
+
+.card .cardTitle .cardTitleIcons .icon {
+  font-size: 22px;
+  color: rgba(128, 128, 128, 0.5);
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.card .cardTitle .cardTitleIcons .icon:hover {
+  animation-name: pulse;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardTitle .cardTitleIcons .icon {
+    font-size: 18px;
+  }
+}
+
+.card .cardBody {
+  display: grid;
+  padding: 14px 10px;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
+  padding: 0 3px;
+}
+
+.card .cardBody .team {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardBody .team {
+    font-size: 15px;
+    padding: 2px;
+  }
+}
+
+.card .cardBody .team .teamLogo {
+  width: 100px;
+  display: grid;
+  place-items: center;
+  height: 100px;
+  border: 10px solid #f8f7f7;
+  border-radius: 50%;
+  box-shadow: 0 0 7px #eee;
+}
+
+.card .cardBody .team .teamLogo .logo {
+  width: 60%;
+  height: 60%;
+  object-fit: cover;
+  border: none;
+  outline: none;
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardBody .team .teamLogo {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+.card .cardBody .matchStats {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  gap: 15px;
+}
+
+.card .cardBody .matchStats .mainc {
+  color: black;
+}
+
+.card .cardBody .matchStats .gold {
+  color: gold;
+}
+
+.card .cardBody .matchStats .black {
+  color: #000;
+}
+
+.card .cardBody .matchStats h1 {
+  font-weight: 600;
+  color: rgb(104, 104, 104);
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardBody .matchStats h1 {
+    font-size: 30px;
+  }
+}
+
+.card .cardBody .matchStats h5 {
+  color: #0000B2;
+  font-weight: 500;
+}
+
+.card .cardBody .matchStats h5 span {
+  font-weight: 600;
+}
+
+.card .cardBody .matchStats .matchInfo {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(128, 128, 128, 0.5);
+}
+
+.card .cardBody .matchStats .matchInfo span {
+  color: gray;
+  font-weight: bold;
+}
+
+.card .cardBody .matchStats .matchInfo.timer {
+  color: gray;
+}
+
+.card .cardBody .matchStats .matchInfo.timer::after {
+  content: "";
+  display: block;
+  background-image: linear-gradient(to right, white 30%, gold 100%);
+  background-size: 200% auto;
+  animation: live-animation 0.8s infinite alternate;
+  height: 2px;
+  margin-bottom: 1px;
+}
+
+.card .cardBody .matchStats .oddsButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem {
+  position: relative;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem input {
+  position: absolute !important;
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem input:checked+label {
+  background: #0000B2;
+  color: gold;
+  box-shadow: none;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem label {
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  display: grid;
+  border: 1px solid #f7f7f7;
+  place-items: center;
+  background: rgba(228, 228, 228, 0.5);
+  box-shadow: 1px 3px 3px #d4d4d4;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem:nth-child(1) label {
+  border-start-start-radius: 40%;
+  border-end-start-radius: 40%;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem:nth-child(2) label {
+  border-radius: 5px;
+}
+
+.card .cardBody .matchStats .oddsButtons .switchItem:nth-child(3) label {
+  border-end-end-radius: 40%;
+  border-start-end-radius: 40%;
+}
+
+.card .cardActions {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.card .cardActions button {
+  outline: none;
+  border: none;
+  position: absolute;
+  bottom: -61px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #0000B2;
+  transition: 0.3s;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 41px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card .cardActions button:hover {
+  background-color: gold;
+  animation-name: wobble;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+}
+
+.card .cardActions button:disabled {
+  background-color: rgba(255, 215, 0, 0.5);
+}
+
+@media screen and (max-width: 1024px) {
+  .card .cardActions {
+    position: none;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card .cardActions button {
+    position: relative;
+    bottom: 0;
+  }
+}

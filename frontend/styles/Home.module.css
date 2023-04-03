@@ -1,10 +1,51 @@
+.home {
+	padding: 30px;
+}
 
+@media screen and (max-width: 1024px) {
+	.home .greetings h3 {
+		display: block;
+	}
+}
 
-.main {
-	padding: 2rem 0;
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+.home .ad {
+	margin-bottom: 20px;
+}
+
+.home .todayLiveMatches {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+}
+
+@media screen and (max-width: 1024px) {
+	.home .todayLiveMatches {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.home .todayLiveMatches {
+		grid-template-columns: none;
+	}
+}
+
+.home .todayInfo {
+	margin-top: 40px;
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 15px;
+}
+
+@media screen and (max-width: 1024px) {
+	.home .todayInfo {
+		grid-template-columns: none;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.home .todayInfo {
+		grid-template-columns: none;
+	}
 }

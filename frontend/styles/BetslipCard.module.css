@@ -1,0 +1,21 @@
+.betslipCard {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 13px rgba(0, 0, 0, .1);
+}
+
+.betslipCard .betslipCardTitle {
+  display: flex;
+  padding: 10px 5px;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.betslipCard .betslipCardBody {
+  padding: 10px 5px;
+  position: relative;
+}

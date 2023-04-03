@@ -2,7 +2,7 @@
 
 html,
 body {
-	background-color: black;
+	background-color: white;
 	font-family: 'Rubik';
 	font-weight: normal;
 }
@@ -35,4 +35,63 @@ a {
 @media (prefers-color-scheme: dark) {
 	html {
 	}
+}
+
+.App {
+	display: flex;
+	width: 100%;
+	background: rgb(250, 250, 250);
+}
+
+.App .AppContainer {
+	flex: 4.3;
+	position: relative;
+}
+
+@media screen and (max-width: 1024px) {
+	.App .AppContainer {
+		flex: none;
+		width: 100%;
+	}
+}
+
+.App .AppContainer .main {
+	padding: 6px 20px;
+}
+
+@media screen and (max-width: 1024px) {
+	.App .AppContainer .main {
+		padding: 10px;
+	}
+}
+
+.App .AppContainer .footer {
+	margin-top: 20px;
+	background-color: rgb(218, 218, 218);
+	color: gray;
+	display: grid;
+	place-items: center;
+	padding: 5px;
+}
+
+.App .AppContainer .footer hr {
+	width: 100%;
+}
+
+.App .AppContainer .footer p {
+	padding: 10px;
+	text-align: center;
+}
+
+.App .AppContainer .footer p:nth-child(1) {
+	display: flex;
+	gap: 10px;
+}
+
+.App a {
+	text-decoration: none;
+}
+
+.App.dark {
+	background: black;
 }
