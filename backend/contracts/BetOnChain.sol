@@ -81,7 +81,7 @@ contract BetOnChain is Ownable {
 
     function createBet(uint256[] calldata betId, uint256[] calldata oddsfor1,uint256[] calldata oddsforDraw, uint256[] calldata oddsfor2) external onlyOwner{
          uint256 length = betId.length;
-         require(length == oddsfor1.length && length == oddsfor2.length && length== oddsforDraw.length, "BetOnChain invalid length of input arrays");
+         require(length >0 && length == oddsfor1.length && length == oddsfor2.length && length== oddsforDraw.length, "BetOnChain invalid length of input arrays");
             for(uint i =0; i< length;){
                if (bets[betId[i]].betsExist) {
                   revert BetOnChain__ThisIdIsAlreadyUsed();
