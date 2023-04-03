@@ -59,49 +59,65 @@ export declare namespace BetOnChain {
 
 export interface BetOnChainInterface extends utils.Interface {
   functions: {
-    "bet(uint256,uint256)": FunctionFragment;
+    "addressToBetToPlayer(address,uint256)": FunctionFragment;
+    "bet(uint256,uint256,uint256)": FunctionFragment;
     "bets(uint256)": FunctionFragment;
     "bocNFT()": FunctionFragment;
     "bocToken()": FunctionFragment;
+    "closeBet(uint256)": FunctionFragment;
+    "createBet(uint256,uint256,uint256,uint256,uint256)": FunctionFragment;
     "getAchievementRequirement()": FunctionFragment;
     "getAchievementURI()": FunctionFragment;
     "getBetPositionURI()": FunctionFragment;
-    "mintBeginnerNft()": FunctionFragment;
-    "mintExpertNft()": FunctionFragment;
-    "mintWarriorNft()": FunctionFragment;
+    "mintAchievementNft(uint256)": FunctionFragment;
     "numberOfBets(address)": FunctionFragment;
+    "openBet(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
+    "playerBets(uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setAchievementRequirement(uint256,uint256,uint256)": FunctionFragment;
     "setAchievementURI(string,string,string)": FunctionFragment;
     "setBetPositionURI(string)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "withdrawPrize(uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "addressToBetToPlayer"
       | "bet"
       | "bets"
       | "bocNFT"
       | "bocToken"
+      | "closeBet"
+      | "createBet"
       | "getAchievementRequirement"
       | "getAchievementURI"
       | "getBetPositionURI"
-      | "mintBeginnerNft"
-      | "mintExpertNft"
-      | "mintWarriorNft"
+      | "mintAchievementNft"
       | "numberOfBets"
+      | "openBet"
       | "owner"
+      | "playerBets"
       | "renounceOwnership"
       | "setAchievementRequirement"
       | "setAchievementURI"
       | "setBetPositionURI"
       | "transferOwnership"
+      | "withdrawPrize"
   ): FunctionFragment;
 
   encodeFunctionData(
+    functionFragment: "addressToBetToPlayer",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "bet",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "bets",
@@ -109,6 +125,20 @@ export interface BetOnChainInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "bocNFT", values?: undefined): string;
   encodeFunctionData(functionFragment: "bocToken", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "closeBet",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createBet",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "getAchievementRequirement",
     values?: undefined
@@ -122,22 +152,22 @@ export interface BetOnChainInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "mintBeginnerNft",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintExpertNft",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintWarriorNft",
-    values?: undefined
+    functionFragment: "mintAchievementNft",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "numberOfBets",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "openBet",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "playerBets",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -166,11 +196,21 @@ export interface BetOnChainInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawPrize",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "addressToBetToPlayer",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "bet", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "bets", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "bocNFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "bocToken", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "closeBet", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "createBet", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getAchievementRequirement",
     data: BytesLike
@@ -184,22 +224,16 @@ export interface BetOnChainInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "mintBeginnerNft",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintExpertNft",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintWarriorNft",
+    functionFragment: "mintAchievementNft",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "numberOfBets",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "openBet", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "playerBets", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -218,6 +252,10 @@ export interface BetOnChainInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawPrize",
     data: BytesLike
   ): Result;
 
@@ -267,14 +305,9 @@ export interface BetOnChain extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    bet(
-      betAmount: PromiseOrValue<BigNumberish>,
-      betFor: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    bets(
-      arg0: PromiseOrValue<BigNumberish>,
+    addressToBetToPlayer(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [string, BigNumber, BigNumber, BigNumber] & {
@@ -285,9 +318,44 @@ export interface BetOnChain extends BaseContract {
       }
     >;
 
+    bet(
+      betAmount: PromiseOrValue<BigNumberish>,
+      betFor: PromiseOrValue<BigNumberish>,
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    bets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, boolean, BigNumber] & {
+        betFor1: BigNumber;
+        betFor2: BigNumber;
+        oddsfor1: BigNumber;
+        oddsfor2: BigNumber;
+        betsOpen: boolean;
+        totalBetAmount: BigNumber;
+      }
+    >;
+
     bocNFT(overrides?: CallOverrides): Promise<[string]>;
 
     bocToken(overrides?: CallOverrides): Promise<[string]>;
+
+    closeBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    createBet(
+      betId: PromiseOrValue<BigNumberish>,
+      betFor1: PromiseOrValue<BigNumberish>,
+      betFor2: PromiseOrValue<BigNumberish>,
+      oddsfor1: PromiseOrValue<BigNumberish>,
+      oddsfor2: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     getAchievementRequirement(
       overrides?: CallOverrides
@@ -299,15 +367,8 @@ export interface BetOnChain extends BaseContract {
 
     getBetPositionURI(overrides?: CallOverrides): Promise<[string]>;
 
-    mintBeginnerNft(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    mintExpertNft(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    mintWarriorNft(
+    mintAchievementNft(
+      achievementLevelToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -316,7 +377,24 @@ export interface BetOnChain extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    openBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
+
+    playerBets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber] & {
+        player: string;
+        betAmount: BigNumber;
+        betFor: BigNumber;
+        nftId: BigNumber;
+      }
+    >;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -345,16 +423,16 @@ export interface BetOnChain extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    withdrawPrize(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  bet(
-    betAmount: PromiseOrValue<BigNumberish>,
-    betFor: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  bets(
-    arg0: PromiseOrValue<BigNumberish>,
+  addressToBetToPlayer(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
     [string, BigNumber, BigNumber, BigNumber] & {
@@ -365,9 +443,44 @@ export interface BetOnChain extends BaseContract {
     }
   >;
 
+  bet(
+    betAmount: PromiseOrValue<BigNumberish>,
+    betFor: PromiseOrValue<BigNumberish>,
+    betId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  bets(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber, boolean, BigNumber] & {
+      betFor1: BigNumber;
+      betFor2: BigNumber;
+      oddsfor1: BigNumber;
+      oddsfor2: BigNumber;
+      betsOpen: boolean;
+      totalBetAmount: BigNumber;
+    }
+  >;
+
   bocNFT(overrides?: CallOverrides): Promise<string>;
 
   bocToken(overrides?: CallOverrides): Promise<string>;
+
+  closeBet(
+    betId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  createBet(
+    betId: PromiseOrValue<BigNumberish>,
+    betFor1: PromiseOrValue<BigNumberish>,
+    betFor2: PromiseOrValue<BigNumberish>,
+    oddsfor1: PromiseOrValue<BigNumberish>,
+    oddsfor2: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   getAchievementRequirement(
     overrides?: CallOverrides
@@ -379,15 +492,8 @@ export interface BetOnChain extends BaseContract {
 
   getBetPositionURI(overrides?: CallOverrides): Promise<string>;
 
-  mintBeginnerNft(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  mintExpertNft(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  mintWarriorNft(
+  mintAchievementNft(
+    achievementLevelToMint: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -396,7 +502,24 @@ export interface BetOnChain extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  openBet(
+    betId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   owner(overrides?: CallOverrides): Promise<string>;
+
+  playerBets(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, BigNumber, BigNumber, BigNumber] & {
+      player: string;
+      betAmount: BigNumber;
+      betFor: BigNumber;
+      nftId: BigNumber;
+    }
+  >;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -426,15 +549,15 @@ export interface BetOnChain extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  callStatic: {
-    bet(
-      betAmount: PromiseOrValue<BigNumberish>,
-      betFor: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+  withdrawPrize(
+    betId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-    bets(
-      arg0: PromiseOrValue<BigNumberish>,
+  callStatic: {
+    addressToBetToPlayer(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
       [string, BigNumber, BigNumber, BigNumber] & {
@@ -445,9 +568,44 @@ export interface BetOnChain extends BaseContract {
       }
     >;
 
+    bet(
+      betAmount: PromiseOrValue<BigNumberish>,
+      betFor: PromiseOrValue<BigNumberish>,
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    bets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, boolean, BigNumber] & {
+        betFor1: BigNumber;
+        betFor2: BigNumber;
+        oddsfor1: BigNumber;
+        oddsfor2: BigNumber;
+        betsOpen: boolean;
+        totalBetAmount: BigNumber;
+      }
+    >;
+
     bocNFT(overrides?: CallOverrides): Promise<string>;
 
     bocToken(overrides?: CallOverrides): Promise<string>;
+
+    closeBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    createBet(
+      betId: PromiseOrValue<BigNumberish>,
+      betFor1: PromiseOrValue<BigNumberish>,
+      betFor2: PromiseOrValue<BigNumberish>,
+      oddsfor1: PromiseOrValue<BigNumberish>,
+      oddsfor2: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getAchievementRequirement(
       overrides?: CallOverrides
@@ -459,18 +617,34 @@ export interface BetOnChain extends BaseContract {
 
     getBetPositionURI(overrides?: CallOverrides): Promise<string>;
 
-    mintBeginnerNft(overrides?: CallOverrides): Promise<void>;
-
-    mintExpertNft(overrides?: CallOverrides): Promise<void>;
-
-    mintWarriorNft(overrides?: CallOverrides): Promise<void>;
+    mintAchievementNft(
+      achievementLevelToMint: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     numberOfBets(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    openBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     owner(overrides?: CallOverrides): Promise<string>;
+
+    playerBets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber] & {
+        player: string;
+        betAmount: BigNumber;
+        betFor: BigNumber;
+        nftId: BigNumber;
+      }
+    >;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -497,6 +671,11 @@ export interface BetOnChain extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdrawPrize(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -511,9 +690,16 @@ export interface BetOnChain extends BaseContract {
   };
 
   estimateGas: {
+    addressToBetToPlayer(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     bet(
       betAmount: PromiseOrValue<BigNumberish>,
       betFor: PromiseOrValue<BigNumberish>,
+      betId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -526,21 +712,28 @@ export interface BetOnChain extends BaseContract {
 
     bocToken(overrides?: CallOverrides): Promise<BigNumber>;
 
+    closeBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    createBet(
+      betId: PromiseOrValue<BigNumberish>,
+      betFor1: PromiseOrValue<BigNumberish>,
+      betFor2: PromiseOrValue<BigNumberish>,
+      oddsfor1: PromiseOrValue<BigNumberish>,
+      oddsfor2: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     getAchievementRequirement(overrides?: CallOverrides): Promise<BigNumber>;
 
     getAchievementURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     getBetPositionURI(overrides?: CallOverrides): Promise<BigNumber>;
 
-    mintBeginnerNft(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    mintExpertNft(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    mintWarriorNft(
+    mintAchievementNft(
+      achievementLevelToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -549,7 +742,17 @@ export interface BetOnChain extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    openBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    playerBets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -578,12 +781,24 @@ export interface BetOnChain extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    withdrawPrize(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    addressToBetToPlayer(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     bet(
       betAmount: PromiseOrValue<BigNumberish>,
       betFor: PromiseOrValue<BigNumberish>,
+      betId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -596,6 +811,20 @@ export interface BetOnChain extends BaseContract {
 
     bocToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    closeBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    createBet(
+      betId: PromiseOrValue<BigNumberish>,
+      betFor1: PromiseOrValue<BigNumberish>,
+      betFor2: PromiseOrValue<BigNumberish>,
+      oddsfor1: PromiseOrValue<BigNumberish>,
+      oddsfor2: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     getAchievementRequirement(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -604,15 +833,8 @@ export interface BetOnChain extends BaseContract {
 
     getBetPositionURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    mintBeginnerNft(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mintExpertNft(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mintWarriorNft(
+    mintAchievementNft(
+      achievementLevelToMint: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -621,7 +843,17 @@ export interface BetOnChain extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    openBet(
+      betId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    playerBets(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -648,6 +880,11 @@ export interface BetOnChain extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawPrize(
+      betId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
