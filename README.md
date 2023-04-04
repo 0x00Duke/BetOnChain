@@ -16,10 +16,6 @@ A global architecture can be found below:
 
 Of course, inputs from external sources are needed in order to have our betting platform working. This is done through Oracles: they provide the ability to bridge the gap between blockchain networks and the outside world. They allow users to send external data to the blockchain, and, as a result, are essential parts of most blockchain applications. Dapps in the DEFI, Risk, betting sectors are not relevant without Oracles.
 
-**Challenges we have encountered**
-
-TBA
-
 **What we have done**
 
  * We are using the following API to get the names of the Teams playing, the odds and the name of the winner:
@@ -36,7 +32,7 @@ TBA
   
  * We have created unit tests:
  
-  BetOnChain, ExchangeToken
+  BetOnChain.ts, ExchangeToken.ts
   
  * We have created a front end
 
@@ -46,20 +42,25 @@ A diagram of the Solidity contracts interaction can be found below:
 
   What is the process?
   
-  1. From the constructor, we mint the inital supply of the BetOnChain Token (BocToken) based on an Input (TBA, which token?)
+  1. From the constructor, we mint the inital supply of the BetOnChain Token (BocToken) based on an initial number of ETH
   
   2. The user can then bet. A NFT is minted for the bet
   
-  3. If the user has done a succesful bet, then an achievement NFT is minted
+  3. If the user has done a bet, then an achievement NFT is minted
 
+**Challenges we have encountered**
+
+ * Finding the right API
+ 
+ * Finding a good mix between having APIs called from the backend and having source inputs through Chainlink
+ 
+ * Set up of the Chainlink node on the Cloud
+ 
 **Next steps**
  
-  * Adding a treasury. Indeed the main added value of blockchain is giving the possibility of a user to be the sole owner of the funds and manage its custody
+  * Adding a treasury. Indeed the main added value of blockchain is giving the possibility of a user to be the sole owner of the funds and manage its custody - so the user can withdraw funds at any time. This feature is not always available in Web 2.0 betting platform - hence the major benefit from blockchain in this case
 
-  * TBA
-
-**Main sources**
-
+  * Chainlink hackathon?
 
 **Team**
 
