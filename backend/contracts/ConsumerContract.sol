@@ -12,10 +12,12 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
 
+
     uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10; 
     uint256 public homeGoal;
     uint256 public awayGoal;
     string public matchName; 
+
     mapping(uint256 => uint256) public matchWinner;
 
     event RequestForInfoFulfilled(

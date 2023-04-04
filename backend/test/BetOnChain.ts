@@ -21,6 +21,11 @@ const BET_ID = 0;
 const BET_ODDS_1 = 0;
 const BET_ODDS_2 = 0;
 
+const betIds = ["0", "1","2"];
+const oddsfor1 = ["1.2", "2.4", "2.6"];
+const oddsfor2 = ["4", "2.1", "1.3"];
+const oddsforDraw = ["3","2.2", "1.4"];
+
 describe("BetOnChain", () => {
     let deployer: SignerWithAddress;
     let player: SignerWithAddress;
@@ -58,7 +63,13 @@ describe("BetOnChain", () => {
             bocContractTokenBalanceBefore = await bocTokenContract.balanceOf(bocContract.address);
             const approveTokenTx = await bocTokenContract.connect(player).approve(bocContract.address, ethers.constants.MaxUint256);
             await approveTokenTx.wait();
-            const createBetTx = await bocContract.connect(deployer).createBet(BET_ID,BET_ODDS_1,BET_ODDS_2);
+
+            const createBetTx = await bocContract.connect(deployer).createBet(
+                betIds.map(ethers.utils.parseEther),
+                oddsfor1.map(ethers.utils.parseEther),
+                oddsforDraw.map(ethers.utils.parseEther),
+                oddsfor2.map(ethers.utils.parseEther));
+
             await createBetTx.wait();
             const openBetTX = await bocContract.connect(deployer).openBet(BET_ID);
             await openBetTX.wait();
@@ -138,6 +149,7 @@ describe("BetOnChain", () => {
                 oddsTeam2Before = await bocContract.getOddsForTeam2(BET_ID);    
                 const betTx = await bocContract.connect(player).bet(BET_AMOUNT2, BET_FOR2, BET_ID );
                 await betTx.wait();
+
             })
             it("Should update the odds for team 1", async () => {
                 const oddsTeam1After = await bocContract.getOddsForTeam1(BET_ID);
@@ -158,6 +170,7 @@ describe("BetOnChain", () => {
                 const nftOwner = await bocNFTContract.ownerOf(0);
                 expect(nftOwner).to.eq(player.address)
             })
+
             
         })
 
