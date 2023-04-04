@@ -79,6 +79,7 @@ contract BetOnChain is Ownable {
 // FUNCTION ZONE
 
 
+
     function createBet(uint256[] calldata betId, uint256[] calldata oddsfor1,uint256[] calldata oddsforDraw, uint256[] calldata oddsfor2) external onlyOwner{
          uint256 length = betId.length;
          require(length >0 && length == oddsfor1.length && length == oddsfor2.length && length== oddsforDraw.length, "BetOnChain invalid length of input arrays");
@@ -92,6 +93,7 @@ contract BetOnChain is Ownable {
                      i++;
                  }
             }
+
     }  
 
 // Manually open and close bets
@@ -111,6 +113,7 @@ contract BetOnChain is Ownable {
         uint256 nftId = _mintBetPosition();
         _updatePlayerBetInfo(msg.sender, betId, betAmount, betFor, nftId);
         _updateBetInfo(betAmount, betId, betFor);     
+
     }
 
 //Withdraw Price:
@@ -131,6 +134,7 @@ contract BetOnChain is Ownable {
     function getOddsForTeam2(uint256 betId) view external returns (uint256) {
         return bets[betId].oddsfor2;
     }
+
 
     function callResults(address oracle, string memory jobId, uint256 betId) external whenBetsClosed(betId) {
         consumerContract.requestMatchResult(oracle, jobId, betId);
@@ -197,6 +201,7 @@ contract BetOnChain is Ownable {
         uint256 nftId = bocNFT.getCurrentId();
         bocNFT.safeMint(msg.sender, betPositionURI);
         return nftId;
+
     }
 
     function _updatePlayerBetInfo(address _player, uint256 betId, uint256 _betAmount, uint256 _betFor, uint256 _nftId) internal {
@@ -247,4 +252,6 @@ contract BetOnChain is Ownable {
         bets[0].winner = 1;
     }
 
+
 }
+
