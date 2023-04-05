@@ -36,7 +36,7 @@ export default function NftGallery({
           body: JSON.stringify({
             address: isDisconnected ? walletAddress : address,
             pageSize: pageSize ? pageSize : 100,
-            chain: chain ? chain : "ETH_MAINNET",
+            chain: chain ? chain : "SEPOLIA",
             pageKey: pageKey ? pageKey : null,
             excludeFilter: excludeFilter,
           }),

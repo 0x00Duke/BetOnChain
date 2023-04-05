@@ -42,7 +42,7 @@ export default function Exchange() {
   useEffect(() => {
     if (address?.length) {
       getBalance(""); // Balance ETH
-      getBalance("0xE205181Eb3D7415f15377F79aA7769F846cE56DD"); // Balance BOC
+      getBalance("0xB2448D911BC792c463AF9ED8cf558a85D97c5Bf1"); // Balance BOC
     }
   }, [address]);
 

@@ -18,7 +18,7 @@ export default function Transactions() {
     <div>
       Transactions
       { isDefinitelyConnected ? (
-        <TransactionHistory walletAddress={address} chain={"ETH_MAINNET"} /> 
+        <TransactionHistory walletAddress={address} chain={"SEPOLIA"} /> 
       ) : <h3>You should connect your wallet !</h3> }
     </div>
   );
