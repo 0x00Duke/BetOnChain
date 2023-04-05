@@ -27,6 +27,7 @@ export default function NftGallery({
     }
     setIsloading(false);
   };
+
   const getNftsForOwner = async () => {
     if (isConnected || walletAddress) {
       try {
@@ -36,7 +37,7 @@ export default function NftGallery({
           body: JSON.stringify({
             address: isDisconnected ? walletAddress : address,
             pageSize: pageSize ? pageSize : 100,
-            chain: chain ? chain : "SEPOLIA",
+            chain: chain ? chain : "sepolia",
             pageKey: pageKey ? pageKey : null,
             excludeFilter: excludeFilter,
           }),
@@ -53,6 +54,7 @@ export default function NftGallery({
   useEffect(() => {
     if (address?.length) fetchNfts();
   }, [address]);
+
   const getNftsForCollection = async () => {
     if (collectionAddress) {
       try {

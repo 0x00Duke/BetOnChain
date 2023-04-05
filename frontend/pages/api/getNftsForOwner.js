@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   try {
     // Fetching the NFTs for an owner with the Alchemy SDK
     const nfts = await alchemy.nft.getNftsForOwner(address, {
-      contractAddresses: ["0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"], // ADD our own nft contract
+      contractAddresses: ["0xff573458aa954b1d83d01d8343362a4795e256c7"], // ADD our own nft contract
       pageSize: pageSize ? pageSize : 100,
       excludeFilters: excludeFilter && [NftFilters.SPAM],
       pageKey: pageKey ? pageKey : "",

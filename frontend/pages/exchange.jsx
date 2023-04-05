@@ -1,6 +1,9 @@
 import { useAccount } from 'wagmi';
 import { fetchBalance } from '@wagmi/core';
 import { useEffect, useState, React } from 'react';
+import { ethers } from 'ethers';
+import * as exchangeJson from './utils/ExchangeToken.json';
+import * as tokenJson from './utils/BocToken.json';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
@@ -15,11 +18,18 @@ export default function Exchange() {
   const [tokensBalance, setTokensBalance] = useState();
   const [tokensBalanceBoc, setTokensBalanceBoc] = useState();
   const [isLoading, setIsloading] = useState(false);
-  const [amountTokenBuy, setAmountTokenBuy] = useState("");
+  const [amountEthToExchange, setAmountEthToExchange] = useState("");
   const [amountTokenWithdraw, setAmountTokenWithdraw] = useState("");
+
+  const [signerAddress, setSignerAddress] = useState("");
+  const [exchange, setExchange] = useState("");
+  const [token, setToken] = useState("");
+
+  let provider;
 
   const getBalance = async (token) => {
     setIsloading(true);
+    //using wagmi to fetch token balance
     const balance = await fetchBalance({
       address: address,
       token: token, // replace by BOC token contract : 0x4f7A67464B5976d7547c860109e4432d50AfB38e
@@ -42,7 +52,7 @@ export default function Exchange() {
   useEffect(() => {
     if (address?.length) {
       getBalance(""); // Balance ETH
-      getBalance("0xB2448D911BC792c463AF9ED8cf558a85D97c5Bf1"); // Balance BOC
+      getBalance("0x50790B1De18317ebF58F7D7e91dB7957304a9877"); // Balance BOC
     }
   }, [address]);
 
@@ -50,26 +60,66 @@ export default function Exchange() {
     setValue(newValue);
   };
 
-  const buyToken = async event => {
-    event.preventDefault(); // prevent page refresh when form is submitted
-    // const signer = provider.getSigner(account);
-    // const deposit = EXCHANGE_CONTRACT.connect(signer);
+  useEffect(() => {
+    const initContract = async () => {
+      const { ethereum } = window;
+      if (ethereum) {
+      try {
+        const exchangeAddress = "0xb6daf0c0d23ea8aa5c8332bf56864a7e3e85185b";
+        const exchangeABI = exchangeJson.abi;
+        const tokenAddress = "0x50790B1De18317ebF58F7D7e91dB7957304a9877";
+        const tokenABI = tokenJson.abi;
+        provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        setSignerAddress(await signer.getAddress())
+        setExchange(new ethers.Contract(
+          exchangeAddress,
+          exchangeABI,
+          signer
+        ));
+        setToken(new ethers.Contract(
+          tokenAddress,
+          tokenABI,
+          signer
+        ))
+      } catch (error) {
+        console.log(error)
+      }
+      } else {
+        console.log("Install Metamask!")
+      }
+    }
+    initContract();
+  }, []);
 
-    // const tx = await deposit.buyTokens(ethers.utils.parseEther(amountTokenBuy), {
-    //   gasLimit: 1_000_000,
-    // });
-    // await tx.wait();
+
+
+  const buyToken = async (event) => {
+    event.preventDefault(); // prevent page refresh when form is submitted
+    try { 
+      const ethToSend = ethers.utils.parseEther(amountEthToExchange);
+      const buyTokenTx = await exchange.buyToken({value: ethToSend});
+      const buyTokenTxReceipt = await buyTokenTx.wait();
+      console.log(buyTokenTxReceipt);
+      setAmountEthToExchange('')
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const withdrawToken = async event => {
     event.preventDefault(); // prevent page refresh when form is submitted
-    // const signer = provider.getSigner(account);
-    // const withdraw = EXCHANGE_CONTRACT.connect(signer);
-
-    // const tx = await withdraw.withdraw(ethers.utils.parseEther(amountTokenWithdraw), {
-    //   gasLimit: 1_000_000,
-    // });
-    // await tx.wait();
+    try { 
+      const amountToken = ethers.utils.parseEther(amountTokenWithdraw);
+      const approveTx = await token.approve(exchange.address, amountToken);
+      await approveTx.wait();
+      const sellTokenTx = await exchange.sellToken(amountToken);
+      const sellTokenTxReceipt = await sellTokenTx.wait();
+      console.log(sellTokenTxReceipt);
+      setAmountTokenWithdraw('')
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -93,10 +143,10 @@ export default function Exchange() {
           <input
             id={styles.buy}
             placeholder="0.0 ETH"
-            value={amountTokenBuy}
-            onChange={e => setAmountTokenBuy(e.target.value)}
+            value={amountEthToExchange}
+            onChange={e => setAmountEthToExchange(e.target.value)}
           />
-          <div className={styles.max} onClick={() => setAmountTokenBuy(tokensBalance?.formatted)}>Max</div>
+          <div className={styles.max} onClick={() => setAmountEthToExchange(tokensBalance?.formatted)}>Max</div>
             <div className={styles.balance}>Balance : {tokensBalance?.formatted} {tokensBalance?.symbol}</div>
           </div>
           <button className={styles.btnBuy} type="submit" onClick={buyToken}>

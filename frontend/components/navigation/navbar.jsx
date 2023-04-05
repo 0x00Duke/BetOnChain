@@ -18,7 +18,7 @@ const Navbar = ({ toggleNav }) => {
 		setIsloading(true);
 		const balance = await fetchBalance({
 			address: address,
-			token: '0xB2448D911BC792c463AF9ED8cf558a85D97c5Bf1', // replace by BOC token contract 
+			token: '0x50790B1De18317ebF58F7D7e91dB7957304a9877', // replace by BOC token contract 
 		});
 		setTokensBalance(balance);
 		setIsloading(false);

@@ -28,7 +28,7 @@ const BetSlip = () => {
     setIsloading(true);
     const balance = await fetchBalance({
       address: address,
-      token: '0x4f7A67464B5976d7547c860109e4432d50AfB38e', // replace by BOC token contract 
+      token: '0x50790B1De18317ebF58F7D7e91dB7957304a9877', // replace by BOC token contract 
     });
     setTokensBalance(balance);
     setIsloading(false);
