@@ -13,7 +13,7 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
 
 
 
-    uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10; 
+    uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10;
     uint256 public homeGoal;
     uint256 public awayGoal;
     string public matchName; 
