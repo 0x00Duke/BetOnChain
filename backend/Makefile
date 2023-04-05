@@ -22,6 +22,10 @@ deploy: compile
 	@echo "Make sure you have LINK and ETH tokens in the Sepolia network .."
 	yarn hardhat run scripts/deploy.ts --network sepolia
 
+local_run: compile
+	yarn hardhat node
+	yarn hardhat run scripts/deploy.ts --network localhost
+
 # CHAINLINK_DATA = ${PWD}/chainlink-node/chainlink_data
 # CHAINLINK_USER = "user@example.com"
 # CHAINLINK_PASSWORD = "password"
