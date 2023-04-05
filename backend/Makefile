@@ -10,7 +10,7 @@ node_modules:
 	mkdir -p $@
 
 clean:
-	rm -rf node_modules yarn.lock artifacts cache typechain-types
+	rm -rf node_modules yarn.lock artifacts cache typechain-types .pnp.cjs .pnp.loader.mjs
 
 compile:
 	yarn hardhat compile
