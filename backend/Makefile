@@ -23,7 +23,7 @@ deploy: compile
 	yarn hardhat run scripts/deploy.ts --network sepolia
 
 local_run: compile
-	yarn hardhat node
+	@echo "Please run the following command on a separate terminal: `yarn hardhat node`"
 	yarn hardhat run scripts/deploy.ts --network localhost
 
 # CHAINLINK_DATA = ${PWD}/chainlink-node/chainlink_data

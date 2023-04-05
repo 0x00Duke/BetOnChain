@@ -3,7 +3,7 @@ import tokenAbi from "../assets/LinkToken.json";
 
 async function main() {
     // Deployment parameters
-    const INITIAL_TOKEN_AMOUNT = ethers.utils.parseUnits("1", 18);
+    const INITIAL_TOKEN_AMOUNT = ethers.utils.parseUnits("100000", 18);
     const INITIAL_ETH_FUNDING = ethers.utils.parseEther("0.2");
 
     // Connecting to provider / wallet
@@ -31,11 +31,13 @@ async function main() {
     console.log("Consumer contract address:", ConsumerContractAddress);
 
     // Funding ConsumerAPI contract with LINK
-    console.log("Funding ConsumerAPI contract with LINK..")
-    const fundAmount = "1000000000000000000"; // Funding with 1 LINK
-    const token = new ethers.Contract(0x779877A7B0D9E8603169DdbD7836e478b4624789, tokenAbi, deployer);
-    const fundingTx = await token.transfer(ConsumerContractAddress, fundAmount)
-    console.log("Funding tx hash:", fundingTx.hash);
+    // console.log("Funding ConsumerAPI contract with LINK..")
+    // const fundAmount = "1000000000000000000"; // Funding with 1 LINK
+    // const token = new ethers.Contract(0x779877A7B0D9E8603169DdbD7836e478b4624789, tokenAbi, deployer);
+    // const fundingTx = await token.transfer(ConsumerContractAddress, fundAmount)
+    // console.log("Funding tx hash:", fundingTx.hash);
+
+    console.log("Done! Successfully deployed BetOnChain contracts!")
 }
 
 main()
