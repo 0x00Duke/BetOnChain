@@ -25,19 +25,3 @@ deploy: compile
 local_run: compile
 	@echo "Please run the following command on a separate terminal: `yarn hardhat node`"
 	yarn hardhat run scripts/deploy.ts --network localhost
-
-# CHAINLINK_DATA = ${PWD}/chainlink-node/chainlink_data
-# CHAINLINK_USER = "user@example.com"
-# CHAINLINK_PASSWORD = "password"
-
-# chainlink_data:
-# 	sudo rm -rf ${CHAINLINK_DATA}
-# 	mkdir -p ${CHAINLINK_DATA}
-# 	echo "user@example.com" > ${CHAINLINK_DATA}/.api
-# 	echo "password" >> ${CHAINLINK_DATA}/.api
-# 	echo "my_wallet_password" > ${CHAINLINK_DATA}/.password
-	
-
-# chainlink_up:
-# 	echo ${ALCHEMY_API_KEY}
-# 	cd chainlink-node && docker-compose up --build
