@@ -15,6 +15,7 @@ error BetOnChain__ThereIsNoWinnerOrWinnerNotSet();
 error BetOnChain__YouBetIsNotAWinningBet();
 
 
+
 /**
  * @title BetOnChain contract - betting functionality
  * @notice You can use this contract to create bets, interact with them, withdraw prizes and mint achievement NFTs.
@@ -85,6 +86,13 @@ contract BetOnChain is Ownable {
         bocToken = BocToken(bocTokenAddress);
     }
 
+    // ************************ //  
+    // *       Events     * //
+    // ************************ //
+
+    event betSent(address _from, address _to, uint256 betId, uint256 amount, uint256 betFor);
+    event prizeWithdraw(address _from, address _to, uint256 betId, uint256 amount);
+    event achievementNftMinted(address _from, address _to, uint256 achievementLevelToMint);
     // ************************ //  
     // *       Modifiers      * //
     // ************************ //
@@ -158,7 +166,8 @@ contract BetOnChain is Ownable {
         bocToken.transferFrom(msg.sender, address(this), betAmount);
         uint256 nftId = _mintBetPosition();
         _updatePlayerBetInfo(msg.sender, betId, betAmount, betFor, nftId);
-        _updateBetInfo(betAmount, betId, betFor);     
+        _updateBetInfo(betAmount, betId, betFor);  
+        emit betSent(msg.sender,address(this),betId,betAmount,betFor)  ;
     }
 
 
@@ -175,6 +184,7 @@ contract BetOnChain is Ownable {
         _burnNft(betId);
         uint256 prizeAmount = _calculatePrizeToWithdraw(betId, winner);
         bocToken.transfer(msg.sender, prizeAmount);
+        emit prizeWithdraw(address(this), msg.sender, betId,prizeAmount);
     }
 
     /**
@@ -245,6 +255,8 @@ contract BetOnChain is Ownable {
         if (achievementLevelToMint > 2) {
             revert BetOnChain__ThisAchievementDoesNotExist();
         }
+        emit achievementNftMinted(address(this),msg.sender,achievementLevelToMint);
+
     }
 
     /**
