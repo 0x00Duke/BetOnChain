@@ -1,21 +1,27 @@
-import { ethers } from "hardhat"
-import tokenAbi from "../assets/LinkToken.json";
+import { network, ethers } from "hardhat"
+import * as tokenAbi from "../assets/LinkToken.json";
+import * as dotenv from 'dotenv';
 
-async function main() {
+
+dotenv.config();
+
+async function deploy() {
     // Deployment parameters
-    const INITIAL_TOKEN_AMOUNT = ethers.utils.parseUnits("100000", 18);
-    const INITIAL_ETH_FUNDING = ethers.utils.parseEther("0.2");
+    
+    const linkTokenAddress: any | undefined = network.config.linkTokenAddress
+
+    const INITIAL_TOKEN_AMOUNT = 1000000;
+    const INITIAL_ETH_FUNDING = ethers.utils.parseUnits("0.3","ether"); // 0.3 ETH (in Wei)
 
     // Connecting to provider / wallet
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
     console.log("Ẁallet balance (in Wei):", (await deployer.getBalance()).toString());
 
-
     // Deploying ExchangeToken contract
     console.log("Deploying ExchangeToken contract.. ");
-    const ExchangeContractFactory = await ethers.getContractFactory("ExchangeToken");
-    const exchangeTokenContract = await ExchangeContractFactory.deploy(INITIAL_TOKEN_AMOUNT, {value: INITIAL_ETH_FUNDING, gasLimit: 30000000});
+    const ExchangeContractFactory = await ethers.getContractFactory("ExchangeToken", deployer);
+    const exchangeTokenContract = await ExchangeContractFactory.deploy(INITIAL_TOKEN_AMOUNT, {value: INITIAL_ETH_FUNDING}); 
     await exchangeTokenContract.deployed();
     const BocTokenAddress = await exchangeTokenContract.betToken();
     console.log(`ExchangeToken address: ${exchangeTokenContract.address}, was funded with ${INITIAL_ETH_FUNDING} Wei. Initial token amount: ${INITIAL_TOKEN_AMOUNT}`);
@@ -23,7 +29,7 @@ async function main() {
 
     // Deploying BetOnChain contract
     console.log("Deploying BetOnChain contract.. ")
-    const BetOnChainFactory = await ethers.getContractFactory("BetOnChain");
+    const BetOnChainFactory = await ethers.getContractFactory("BetOnChain", deployer);
     const bocContract = await BetOnChainFactory.deploy(BocTokenAddress);
     await bocContract.deployed();
     console.log("BetOnChain address:", bocContract.address);
@@ -31,16 +37,15 @@ async function main() {
     console.log("Consumer contract address:", ConsumerContractAddress);
 
     // Funding ConsumerAPI contract with LINK
-    // console.log("Funding ConsumerAPI contract with LINK..")
-    // const fundAmount = "1000000000000000000"; // Funding with 1 LINK
-    // const token = new ethers.Contract(0x779877A7B0D9E8603169DdbD7836e478b4624789, tokenAbi, deployer);
-    // const fundingTx = await token.transfer(ConsumerContractAddress, fundAmount)
-    // console.log("Funding tx hash:", fundingTx.hash);
-
+    console.log("Funding ConsumerAPI contract with LINK..")
+    const fundAmount = "1000000000000000000"; // Funding with 1 LINK
+    const token = new ethers.Contract(linkTokenAddress, tokenAbi, deployer);
+    const fundingTx = await token.transfer(ConsumerContractAddress, fundAmount)
+    console.log("Contract funded, transaction hash ", fundingTx.hash);
     console.log("Done! Successfully deployed BetOnChain contracts!")
 }
 
-main()
+deploy()
     .then(() => process.exit(0))
     .catch((error) => {
         console.error(error)
