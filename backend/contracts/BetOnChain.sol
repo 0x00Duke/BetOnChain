@@ -92,7 +92,7 @@ contract BetOnChain is Ownable {
 
     event betSent(address _from, address _to, uint256 betId, uint256 amount, uint256 betFor);
     event prizeWithdraw(address _from, address _to, uint256 betId, uint256 amount);
-    event achievementNftMinted(address _to, uint256 achievementLevelToMint);
+    event achievementNftMinted(address _from, address _to, uint256 achievementLevelToMint);
     // ************************ //  
     // *       Modifiers      * //
     // ************************ //
@@ -255,7 +255,7 @@ contract BetOnChain is Ownable {
         if (achievementLevelToMint > 2) {
             revert BetOnChain__ThisAchievementDoesNotExist();
         }
-        emit achievementNftMinted(msg.sender,achievementLevelToMint);
+        emit achievementNftMinted(address(this),msg.sender,achievementLevelToMint);
     }
 
     /**
