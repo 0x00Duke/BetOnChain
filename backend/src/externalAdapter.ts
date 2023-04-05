@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const API_KEY = process.env.API_KEY;
+const SPORTMONKS_API_KEY = process.env.SPORTMONKS_API_KEY;
 
 type EAinput = {
     id: number | string;
@@ -55,7 +55,7 @@ app.post("/", async (req: Request, res: Response) => {
         method: 'GET',
         url: `https://api.sportmonks.com/v3/football/fixtures/${eaInputData.data.fixtureId}?&include=scores;`,
         headers: {
-            'Authorization': API_KEY
+            'Authorization': SPORTMONKS_API_KEY
         }
       };
 

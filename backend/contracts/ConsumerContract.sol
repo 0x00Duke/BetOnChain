@@ -30,7 +30,7 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     constructor() ConfirmedOwner(msg.sender) {
         setChainlinkToken(0x779877A7B0D9E8603169DdbD7836e478b4624789);
     }
-
+    
     ///@notice We have to give the address of the oracle, the custom jobId and the fixtureId for the API
     function requestMatchResult(
         address _oracle,
