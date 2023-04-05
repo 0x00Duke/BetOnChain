@@ -17,7 +17,6 @@ export default function Profile() {
   return (
     <div>
       Profile
-
       {isDefinitelyConnected ? (
         <NftGallery walletAddress={address} collectionAddress="0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85" />
       ) : <h3>You should connect your wallet !</h3>}

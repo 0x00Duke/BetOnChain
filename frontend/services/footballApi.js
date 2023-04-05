@@ -21,10 +21,3 @@ export const footballApi = createApi({
 });
 
 export const { useGetFootballMatchesQuery, useGetFootballTeamLogoQuery, useGetFootballMatchOddsQuery } = footballApi
-
-
-
-
-
-
-
