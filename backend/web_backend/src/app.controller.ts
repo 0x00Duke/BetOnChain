@@ -1,9 +1,13 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Post, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
+import { PublicBetOnChain } from './ContractInteraction/PublicBetOnChain';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly publicBetOnChain: PublicBetOnChain,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -27,5 +31,14 @@ export class AppController {
   @Get('currentweek/')
   getCurrentWeekGames(@Query('leagueId') leagueId: number) {
     return this.appService.getCurrentWeekGames(leagueId);
+  }
+
+  @Post('bet/')
+  async bet(
+    @Query('betAmount') betAmount: number,
+    @Query('betFor') betFor: number,
+    @Query('betId') betId: number,
+  ) {
+    return await this.publicBetOnChain.bet(betAmount, betFor, betId);
   }
 }
