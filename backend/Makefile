@@ -1,19 +1,26 @@
-#!make
-include .env
-
 .PHONY: all clean	
 
 all: yarn.lock
 
 yarn.lock: node_modules package.json
-    $(MAKE clean)
-    yarn install --production=false
+	$(MAKE clean)
+	yarn install
 
 node_modules:
-    mkdir -p $@
+	mkdir -p $@
 
 clean:
-    rm -fr node_modules yarn.lock
+	rm -rf node_modules yarn.lock artifacts cache typechain-types
+
+compile:
+	yarn hardhat compile
+
+test: compile
+	yarn hardhat test
+
+deploy: compile
+	@echo "Make sure you have LINK and ETH tokens in the Sepolia network .."
+	yarn hardhat run scripts/deploy.ts --network sepolia
 
 # CHAINLINK_DATA = ${PWD}/chainlink-node/chainlink_data
 # CHAINLINK_USER = "user@example.com"

@@ -5,7 +5,7 @@ require("dotenv").config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "********"
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
-const GOERLI_RPC_URL = "https://eth-goerli.alchemyapi.io/v2/" + ALCHEMY_API_KEY
+const SEPOLIA_RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/" + ALCHEMY_API_KEY
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -16,28 +16,17 @@ const config: HardhatUserConfig = {
       {
         version: '0.8.7',
       },
-      {
-        version: '0.4.24',
-      },
-      {
-        version: '0.6.6',
-      },
     ],
   },
-  defaultNetwork: "hardhat",
+  defaultNetwork: "localhost",
   networks: {
-    hardhat: {
-      forking: {
-        url: GOERLI_RPC_URL
-      }
-    },
     localhost: {
       chainId: 31337,
     },
-    goerli: {
-      url: GOERLI_RPC_URL,
+    sepolia: {
+      url: SEPOLIA_RPC_URL,
       accounts: [PRIVATE_KEY],
-      chainId: 5,
+      chainId: 11155111,
     },
   },
 };
