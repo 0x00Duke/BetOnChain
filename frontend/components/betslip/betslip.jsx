@@ -46,9 +46,6 @@ const BetSlip = () => {
     if (bets.length > 0) {
       setValue('2');
     }
-    else {
-      setValue('1');
-    }
   }, [bets.length]);
 
   useEffect(() => {
@@ -89,6 +86,7 @@ const BetSlip = () => {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <TabList onChange={handleChange} className={styles.timtim} >
                     <Tab label="Betslip" value="2" />
+                    <Tab disabled label="" value="1" />
                   </TabList>
                 </Box>
                 {
@@ -164,8 +162,12 @@ const BetSlip = () => {
                         )
                       }
                     </TabPanel>
+         
                   )
                 }
+                <TabPanel value="1">
+
+                </TabPanel>
               </TabContext>
             </Box>
           </div>
