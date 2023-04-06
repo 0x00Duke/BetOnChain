@@ -1,0 +1,4 @@
+getOdds
+place bet
+upcomingMatches {HomeTeam, AwayTeam, date, League, logo}
+getPastMatches {HomeTeam, AwayTeam, date, League, logo, result}

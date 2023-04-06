@@ -1,0 +1,46 @@
+.accountTokenBalance, .accountTokenBalanceBoc {
+  display: block;
+  padding: 15px;
+}
+
+.accountTokenBalance b, .accountTokenBalanceBoc b {
+  display: block;
+  color: #0000B2;
+}
+
+#buy, #withdraw {
+  padding: 10px;
+}
+
+#buy:focus {
+  outline: none;
+}
+
+.buyToken, .withdrawToken {
+  padding: 15px;
+}
+
+.buyToken label, .withdrawToken label {
+  color: #0000B2;
+  display: block;
+}
+
+.max {
+  display: inline;
+  border: 1px solid;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.balance {
+  margin: 10px 0;
+}
+
+.btnBuy {
+  border: 1px solid;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 7px;
+  background-color: #0000B2;
+  color: white;
+}
