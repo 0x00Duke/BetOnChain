@@ -334,10 +334,10 @@ const Card = () => {
   <form onSubmit={handleSubmit} className={styles.card}>
       <div className={styles.cardTitle}>
         <span style={{flex: "1"}}>
-          {moment(matchObj?.startTimestamp).format('ddd, hA')}
+          Wed, 9PM
         </span>
         <div className={styles.cardTitleText} style={{ flex: "auto" }}>
-          {matchObj?.roundInfo?.name}
+          Champions League
         </div>
         <div className={styles.cardTitleIcons}>
         </div>
@@ -349,7 +349,7 @@ const Card = () => {
       <div className={styles.cardBody}>
 
         <div className={styles.team}>
-          <div className={styles.teamName}> {matchObj?.homeTeam?.name} </div>  {/* API CAll for Home Team */} 
+            <div className={styles.teamName}> FC Barcelona </div>  {/* API CAll for Home Team */} 
         </div>
 
         {/* Team 1 name*/}
@@ -379,7 +379,7 @@ const Card = () => {
 
       {/* Team 2 name*/}
         <div className={styles.team}>
-          <div className={styles.teamName}> {matchObj?.awayTeam?.name} </div>  {/* API CAll for Away team */} 
+          <div className={styles.teamName}> Inter Milan </div>  {/* API CAll for Away team */} 
         </div>
 
       </div>
