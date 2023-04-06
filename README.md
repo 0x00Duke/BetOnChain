@@ -22,8 +22,6 @@ Of course, inputs from external sources are needed in order to have our betting 
  
 https://www.football-data.org/
    
- * From the backend, for efficency purposes, we are calling several data points (TBA) from the API to show them on the frontend 
- 
  * Thanks to Chainlink, we are retrieving the name of the Winner
  
  * We have focused on defining the main structure of the Solidity contracts:
@@ -54,17 +52,15 @@ A diagram of the Solidity contracts interaction can be found below:
   
   4. Then we need to run a Chainlink node to get the result of the games (winner) from the ConsumerContract.sol
   
-  5. The backend provides information like the names of the Teams, the odds (to be checked)
+  5. Then the user can trigger a bet from the frontend
   
-  6. Then the user can trigger a bet from the frontend
+  6. Once the game is finished, the name of the winner is provided by the Chainlink oracle and the user (having triggered a bet) gets a NFT
   
-  7. Once the game is finished, the name of the winner is provided by the Chainlink oracle and the user (having triggered a bet) gets a NFT
+  7. Depending on the number of bets triggered, there are different levels of achievements (beginner, warrior and expert). These levels can be set up by the owner of the BetOnChain contract
   
-  8. Depending on the number of bets triggered, there are different levels of achievements (beginner, warrior and expert). These levels can be set up by the owner of the BetOnChain contract
+  8. A winner gets the amount bet + the prize of the bet (which depends on the odds)
   
-  9. A winner gets the amount bet + the prize of the bet (which depends on the odds)
-  
-  10. A person who did not win looses the amount bet (betAmount)
+  9. A person who did not win looses the amount bet (betAmount)
   
 **Challenges we have encountered**
 
