@@ -2,7 +2,7 @@
 
 **Introduction**
 
-With the World Cup which just ended a couple of months ago, it is interesting to have a look at the sports/esports betting market. It is a very large one: More than 75 Billion dollars according to a _grandviewresearch_ study (https://www.grandviewresearch.com/industry-analysis/sports-betting-market-report). Such a market is sometimes considered to be manipulated, not very transparent, etc and deposited funds cannot always be withdrawn. The blockchain, with its unique technology, can add transparency into this market and hence, make it more efficient. Besides, users, by managing their private keys, are the sole owners of the funds.
+With the World Cup which just ended a couple of months ago, it is interesting to have a look at the sports/esports betting market. It is a very large one: More than 75 Billion dollars according to a _grandviewresearch_ study (https://www.grandviewresearch.com/industry-analysis/sports-betting-market-report). Such a market is sometimes considered to be manipulated, not very transparent, etc. and deposited funds cannot always be withdrawn. The blockchain, with its unique technology, can add transparency into this market and hence, make it more efficient. Besides, users, by managing their private keys, are the sole owners of the funds.
 
 **Our idea**
 
