@@ -10,7 +10,7 @@ A global architecture can be found below:
 
 
 
-![image](https://user-images.githubusercontent.com/92883939/205520437-894f32cd-9473-4877-9465-749796d7a00f.png)
+![image](https://user-images.githubusercontent.com/92883939/230450861-32781968-07cf-49a9-bb47-373e67a6c257.png)
 
 
 
