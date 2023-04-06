@@ -11,22 +11,21 @@ import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
-    ///@param ORACLE_PAYMENT is the amount of link token that this contract should have in order to send it with a request
+    
     uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10; 
-    ///@param homeGoal is the number of goals for the home team 
     uint256 public homeGoal;
-    ///@param awayGoal is the number of goals for the away team
     uint256 public awayGoal;
-    ///@param matchName is team 1 vs team 2 names
-    string public matchName; 
-    ///@param matchWinner is a mapping from the fixtureId of the API to the result computed on the external adapter. 0 for no winner, 1 if the winner is home team and 2 if the winner is away team
+    string public homeTeam;
+    string public awayTeam; 
+
     mapping(uint256 => uint256) public matchWinner;
 
     event RequestForInfoFulfilled(
         bytes32 indexed requestId,
         uint256 indexed homeGoal,
         uint256 indexed awayGoal,
-        string matchName
+        string homeTeam,
+        string awayTeam
     );
 
     constructor() ConfirmedOwner(msg.sender) {
@@ -48,12 +47,13 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     }
 
     ///@notice This function will be called as a call back function once the chainlink node have all the information requested
-    function fulfillRequestInfo(bytes32 _requestId, uint256 _homeGoal, uint256 _awayGoal, string memory _matchName, uint256 _fixtureId, uint256 _winner)
+    function fulfillRequestInfo(bytes32 _requestId, uint256 _homeGoal, uint256 _awayGoal, string memory _homeTeam, string memory _awayTeam, uint256 _fixtureId, uint256 _winner)
         public
         recordChainlinkFulfillment(_requestId)
     {
-        emit RequestForInfoFulfilled(_requestId, _homeGoal, _awayGoal, _matchName);
-        matchName = _matchName;
+        emit RequestForInfoFulfilled(_requestId, _homeGoal, _awayGoal, _homeTeam, _awayTeam);
+        homeTeam = _homeTeam;
+        awayTeam = _awayTeam;
         homeGoal = _homeGoal;
         awayGoal = _awayGoal;
         matchWinner[_fixtureId] = _winner;

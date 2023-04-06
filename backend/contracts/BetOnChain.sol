@@ -4,27 +4,38 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {BocNFT} from './BocNFT.sol';
 import {BocToken} from './BocToken.sol';
-import "https://github.com/CementDAO/Fixidity/blob/master/contracts/FixidityLib.sol";
+import {ConsumerContract} from './ConsumerContract.sol';
 
 error BetOnChain__RequirementsNotMet();
 error BetOnChain__ThisAchievementDoesNotExist();
+error BetOnChain__ThisTeamDoesNotExist();
+error BetOnChain__ThisIdIsAlreadyUsed();
+error BetOnChain__YouNeedTheNftToWithdrawPrize();
+error BetOnChain__ThereIsNoWinnerOrWinnerNotSet();
+error BetOnChain__YouBetIsNotAWinningBet();
 
 contract BetOnChain is Ownable {
 
     struct PlayerBetInfo {
         address player;
+        uint256 betId;
         uint256 betAmount;
         uint256 betFor;
         uint256 nftId;
     }
 
     struct BetInfo{
-        uint256 betFor1;
-        uint256 betFor2;
+        uint256 oddsfor0;
         uint256 oddsfor1;
         uint256 oddsfor2;
         bool betsOpen;
+        bool betsExist; 
+        uint256 totalBetAmountFor0;
+        uint256 totalBetAmountFor1;
+        uint256 totalBetAmountFor2; 
         uint256 totalBetAmount;
+        uint256 winner;
+        bool winnerCalled;
     }
 
     struct AchievementURI {
@@ -39,20 +50,21 @@ contract BetOnChain is Ownable {
         uint256 expertNumberOfBets;
     }
 
+    uint256 private constant BOOTSTRAP_BET_AMOUNT = 1*10**18;
     string private betPositionURI; 
     AchievementURI private achievementURI;
     AchievementRequirement private achievementRequirement;
-    PlayerBetInfo[] public playerBets;
     BocNFT public bocNFT;
     BocToken public bocToken;
+    ConsumerContract public consumerContract;
    
     mapping(address => uint) public numberOfBets;
     mapping(uint256 => BetInfo) public bets; // Mapping to match ID with Bet 
-    mapping(address=> mapping (uint256=> PlayerBetInfo)) public addressToBetToPlayer;
-    mapping(uint256 => uint256) oddsToTeams;
+    mapping(address => mapping (uint256 => PlayerBetInfo)) public addressToBetToPlayer;
 
     constructor(address bocTokenAddress) {
         bocNFT = new BocNFT();
+        consumerContract = new ConsumerContract();
         bocToken = BocToken(bocTokenAddress);
     }
 
@@ -67,12 +79,18 @@ contract BetOnChain is Ownable {
         _;
     }
 
+    modifier winnerCalled(uint256 betId) {
+        require(bets[betId].winnerCalled, "Winner not called yet");
+        _;
+    }
+
 // FUNCTION ZONE
 
-    function createBet(uint256 betId, uint256 betFor1, uint256 betFor2,uint256 oddsfor1, uint256 oddsfor2) external onlyOwner{
-        BetInfo memory newBet = BetInfo(betFor1,betFor2,oddsfor1, oddsfor2,false,0);
-        oddsToTeams[betFor1]= oddsfor1;
-        oddsToTeams[betFor2]= oddsfor2;
+    function createBet(uint256 betId, uint256 oddsfor0, uint256 oddsfor1, uint256 oddsfor2) external onlyOwner{
+        if (bets[betId].betsExist) {
+            revert BetOnChain__ThisIdIsAlreadyUsed();
+        }
+        BetInfo memory newBet = BetInfo(oddsfor0, oddsfor1, oddsfor2, false, true, BOOTSTRAP_BET_AMOUNT, BOOTSTRAP_BET_AMOUNT, BOOTSTRAP_BET_AMOUNT, 0, 0, false);
         bets[betId]= newBet;
     }  
 // Manually open and close bets
@@ -84,26 +102,47 @@ contract BetOnChain is Ownable {
         bets[betId].betsOpen = false;
     }
 
-// Withdraw Price:
-    function withdrawPrize(uint256 betId) external whenBetsClosed(betId){
-        require(addressToBetToPlayer[msg.sender][betId].betAmount >0, "User has not made a bet");
-       // Import lib for safe math mul and div (not precise in solidity)
-       //  uint256 totalPrize= uint256(addressToBetToPlayer[msg.sender][betId].betAmount)*uint256(oddsToTeams[addressToBetToPlayer[msg.sender][betId].betFor]);
-       // bocToken.transferFrom(address(this),msg.sender, totalPrize);
+    function bet(uint256 betAmount, uint256 betFor, uint256 betId) external whenBetsOpen(betId){
+        if (betFor != 1 && betFor != 2 && betFor != 0) {
+            revert BetOnChain__ThisTeamDoesNotExist();
+        }
+        bocToken.transferFrom(msg.sender, address(this), betAmount);
+        uint256 nftId = _mintBetPosition();
+        _updatePlayerBetInfo(msg.sender, betId, betAmount, betFor, nftId);
+        _updateBetInfo(betAmount, betId, betFor);     
     }
 
+//Withdraw Price:
+    function withdrawPrize(uint256 betId) external whenBetsClosed(betId) {
+        uint256 winner = bets[betId].winner;
+        if (addressToBetToPlayer[msg.sender][betId].betFor != winner) {
+            revert BetOnChain__YouBetIsNotAWinningBet();
+        }
+        _burnNft(betId);
+        uint256 prizeAmount = _calculatePrizeToWithdraw(betId, winner);
+        bocToken.transfer(msg.sender, prizeAmount);
+    }
 
-// Need to review this function to get it fully functionnal with a bet
+    function getOddsForTeam1(uint256 betId) view external returns (uint256) {
+        return bets[betId].oddsfor1;
+    }
 
-    function bet(uint256 betAmount, uint256 betFor,uint256 betId) external whenBetsOpen(betId){
-        bocToken.transferFrom(msg.sender, address(this), betAmount);
-        uint256 nftId = bocNFT.getCurrentId();
-        PlayerBetInfo memory myBet = PlayerBetInfo(msg.sender, betAmount, betFor, nftId);
-        playerBets.push(myBet);
-        bets[betId].totalBetAmount += betAmount; 
-        addressToBetToPlayer[msg.sender][betId] = myBet;
-        _mintBetPosition();
-        numberOfBets[msg.sender] += 1;
+    function getOddsForTeam2(uint256 betId) view external returns (uint256) {
+        return bets[betId].oddsfor2;
+    }
+
+    function getOddsForDraw(uint256 betId) view external returns (uint256) {
+        return bets[betId].oddsfor0;
+    }
+
+    function callResults(address oracle, string memory jobId, uint256 betId) external whenBetsClosed(betId) {
+        consumerContract.requestMatchResult(oracle, jobId, betId);
+        bets[betId].winnerCalled = true;
+    }
+
+    function getWinner(uint256 betId) external {
+        uint256 winner = consumerContract.matchWinner(betId);
+        bets[betId].winner = winner;
     }
 
     function mintAchievementNft(uint256 achievementLevelToMint) external {
@@ -158,7 +197,66 @@ contract BetOnChain is Ownable {
         return achievementRequirement;
     }
 
-    function _mintBetPosition() internal {
+    function _mintBetPosition() internal returns (uint256) {
+        uint256 nftId = bocNFT.getCurrentId();
         bocNFT.safeMint(msg.sender, betPositionURI);
+        return nftId;
     }
+
+    function _updatePlayerBetInfo(address _player, uint256 betId, uint256 _betAmount, uint256 _betFor, uint256 _nftId) internal {
+        PlayerBetInfo memory myBet = PlayerBetInfo(_player, betId, _betAmount, _betFor, _nftId);
+        addressToBetToPlayer[msg.sender][betId] = myBet;
+        numberOfBets[msg.sender] += 1;
+    }
+
+    function _updateBetInfo(uint256 _betAmount, uint256 _betId, uint256 _betFor) internal {
+        if (_betFor == 1) {
+            bets[_betId].totalBetAmountFor1 += _betAmount;
+        } 
+        if (_betFor == 2) {
+            bets[_betId].totalBetAmountFor2 += _betAmount;
+        } 
+        if (_betFor == 0)
+        {
+            bets[_betId].totalBetAmountFor0 += _betAmount;
+        }
+        bets[_betId].totalBetAmount += _betAmount; 
+        uint256 totalBetAmountFor1 = bets[_betId].totalBetAmountFor1;
+        uint256 totalBetAmountFor2 = bets[_betId].totalBetAmountFor2;
+        uint256 totalBetAmountFor0 = bets[_betId].totalBetAmountFor0;
+        uint256 oddsFor2 =  ((totalBetAmountFor1 + totalBetAmountFor0) * 10000 / totalBetAmountFor2) + 10000;
+        bets[_betId].oddsfor2 = oddsFor2;
+        uint256 oddsFor1 =  ((totalBetAmountFor2 + totalBetAmountFor0) * 10000 / totalBetAmountFor1) + 10000;
+        bets[_betId].oddsfor1 = oddsFor1;
+        uint256 oddsFor0 =  ((totalBetAmountFor2 + totalBetAmountFor1) * 10000 / totalBetAmountFor0) + 10000;
+        bets[_betId].oddsfor0 = oddsFor0;
+    }
+
+    function _burnNft(uint256 _betId) internal {
+        uint256 nftId = addressToBetToPlayer[msg.sender][_betId].nftId;
+        if(bocNFT.ownerOf(nftId) != msg.sender) {
+            revert BetOnChain__YouNeedTheNftToWithdrawPrize();
+        }
+        bocNFT.burn(nftId);
+    }
+
+    function _calculatePrizeToWithdraw(uint256 _betId, uint256 _winner) view internal returns (uint256) {
+        uint256 betAmount = addressToBetToPlayer[msg.sender][_betId].betAmount;
+        uint256 odds;
+        if (_winner == 1) {
+            odds = bets[_betId].oddsfor1;
+        } else if (_winner == 2) {
+            odds = bets[_betId].oddsfor2;
+        } else {
+            odds = bets[_betId].oddsfor0;
+        } 
+        uint256 prize = (betAmount * odds) / 10000 - 2*10**18;
+        return prize;
+    }
+
+    // helper function to test the winner without oracle
+    function _setWinnerBetId0() external onlyOwner() {
+        bets[0].winner = 1;
+    }
+
 }
