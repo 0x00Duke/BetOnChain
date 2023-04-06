@@ -12,11 +12,13 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
 
-
-    uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10;
+    
+    uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10; 
     uint256 public homeGoal;
     uint256 public awayGoal;
-    string public matchName; 
+    string public homeTeam;
+    string public awayTeam; 
+
 
     mapping(uint256 => uint256) public matchWinner;
 
@@ -24,7 +26,8 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
         bytes32 indexed requestId,
         uint256 indexed homeGoal,
         uint256 indexed awayGoal,
-        string matchName
+        string homeTeam,
+        string awayTeam
     );
 
     constructor() ConfirmedOwner(msg.sender) {
@@ -46,12 +49,13 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     }
 
     ///@notice This function will be called as a call back function once the chainlink node have all the information requested
-    function fulfillRequestInfo(bytes32 _requestId, uint256 _homeGoal, uint256 _awayGoal, string memory _matchName, uint256 _fixtureId, uint256 _winner)
+    function fulfillRequestInfo(bytes32 _requestId, uint256 _homeGoal, uint256 _awayGoal, string memory _homeTeam, string memory _awayTeam, uint256 _fixtureId, uint256 _winner)
         public
         recordChainlinkFulfillment(_requestId)
     {
-        emit RequestForInfoFulfilled(_requestId, _homeGoal, _awayGoal, _matchName);
-        matchName = _matchName;
+        emit RequestForInfoFulfilled(_requestId, _homeGoal, _awayGoal, _homeTeam, _awayTeam);
+        homeTeam = _homeTeam;
+        awayTeam = _awayTeam;
         homeGoal = _homeGoal;
         awayGoal = _awayGoal;
         matchWinner[_fixtureId] = _winner;

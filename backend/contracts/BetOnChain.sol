@@ -36,15 +36,19 @@ contract BetOnChain is Ownable {
     ///  @dev Struct that contains information about a bet
      
     struct BetInfo{
+
+        uint256 oddsfor0;
         uint256 oddsfor1;
         uint256 oddsfor2;
-        uint256 oddsforDraw;
         bool betsOpen;
         bool betsExist; 
+        uint256 totalBetAmountFor0;
         uint256 totalBetAmountFor1;
         uint256 totalBetAmountFor2; 
         uint256 totalBetAmount;
         uint256 winner;
+        bool winnerCalled;
+
     }
     /// @dev Struct that contains the URIs of the achievement NFTs
     
@@ -61,6 +65,8 @@ contract BetOnChain is Ownable {
         uint256 expertNumberOfBets;
     }
     
+    uint256 private constant BOOTSTRAP_BET_AMOUNT = 1*10**18;
+
     string private betPositionURI; 
     AchievementURI private achievementURI;
     AchievementRequirement private achievementRequirement;
@@ -68,10 +74,12 @@ contract BetOnChain is Ownable {
     BocToken public bocToken;
     ConsumerContract public consumerContract;
    
+
     mapping(address => uint) public numberOfBets; // number of bets mapping
     mapping(uint256 => BetInfo) public bets; // mapping to match ID with Bet 
     /// @dev mapping that matches addresses to a mapping that matches betIds with playerBetInfo 
     mapping(address => mapping (uint256 => PlayerBetInfo)) public addressToBetToPlayer; 
+
 
 
     /**
@@ -107,6 +115,11 @@ contract BetOnChain is Ownable {
         _;
     }
 
+    modifier winnerCalled(uint256 betId) {
+        require(bets[betId].winnerCalled, "Winner not called yet");
+        _;
+    }
+
     // ************************ //  
     // *       Functions     * //
     // ************************ //
@@ -116,22 +129,23 @@ contract BetOnChain is Ownable {
      * @dev     Only owner can call this function
      * @param   betId  array of unique identifiers of bet to be created 
      * @param   oddsfor1  array of odds for team 1
-     * @param   oddsforDraw  array of odds for a draw
+     * @param   oddsfor0  array of odds for a draw
      * @param   oddsfor2  array of odds for team 2
      */
-    function createBet(uint256[] calldata betId, uint256[] calldata oddsfor1,uint256[] calldata oddsforDraw, uint256[] calldata oddsfor2) external onlyOwner{
+    function createBet(uint256[] calldata betId, uint256[] calldata oddsfor1,uint256[] calldata oddsfor0, uint256[] calldata oddsfor2) external onlyOwner{
          uint256 length = betId.length;
-         require(length >0 && length == oddsfor1.length && length == oddsfor2.length && length== oddsforDraw.length, "BetOnChain invalid length of input arrays");
+         require(length >0 && length == oddsfor1.length && length == oddsfor2.length && length== oddsfor0.length, "BetOnChain invalid length of input arrays");
             for(uint i =0; i< length;){
                if (bets[betId[i]].betsExist) {
                   revert BetOnChain__ThisIdIsAlreadyUsed();
               }
-                BetInfo memory newBet = BetInfo(oddsfor1[i], oddsfor2[i], oddsforDraw[i], false, true, 1 ether, 1 ether, 0, 0);
+                BetInfo memory newBet = BetInfo(oddsfor0[i], oddsfor1[i], oddsfor2[i],  false, true, BOOTSTRAP_BET_AMOUNT, BOOTSTRAP_BET_AMOUNT, BOOTSTRAP_BET_AMOUNT, 0, 0, false);
                 bets[betId[i]]= newBet;
                  unchecked{  
                      i++;
                  }
             }
+
     }  
 
     /**
@@ -152,6 +166,7 @@ contract BetOnChain is Ownable {
         bets[betId].betsOpen = false;
     }
 
+
     /**
      * @notice  Bet certain amount for a team when bet is open.
      * @dev     Allows a user to place a bet on a particular outcome for a given bet ID and mint NFT for given bet.
@@ -159,13 +174,15 @@ contract BetOnChain is Ownable {
      * @param   betFor  The team  that the user is betting on. This should be either 1 or 2.
      * @param   betId   Unique identifier of the bet.
      */
-    function bet(uint256 betAmount, uint256 betFor, uint256 betId) external whenBetsOpen(betId){
-        if (betFor != 1 && betFor !=2 ) {
+     function bet(uint256 betAmount, uint256 betFor, uint256 betId) external whenBetsOpen(betId){
+        if (betFor != 1 && betFor != 2 && betFor != 0) {
+
             revert BetOnChain__ThisTeamDoesNotExist();
         }
         bocToken.transferFrom(msg.sender, address(this), betAmount);
         uint256 nftId = _mintBetPosition();
         _updatePlayerBetInfo(msg.sender, betId, betAmount, betFor, nftId);
+
         _updateBetInfo(betAmount, betId, betFor);  
         emit betSent(msg.sender,address(this),betId,betAmount,betFor)  ;
     }
@@ -176,6 +193,7 @@ contract BetOnChain is Ownable {
      * @dev     Only NFT owner for that bet can withdraw prize. 
      * @param   betId  Unique identifier of the bet
      */
+
     function withdrawPrize(uint256 betId) external whenBetsClosed(betId) {
         uint256 winner = bets[betId].winner;
         if (addressToBetToPlayer[msg.sender][betId].betFor != winner) {
@@ -185,6 +203,7 @@ contract BetOnChain is Ownable {
         uint256 prizeAmount = _calculatePrizeToWithdraw(betId, winner);
         bocToken.transfer(msg.sender, prizeAmount);
         emit prizeWithdraw(address(this), msg.sender, betId,prizeAmount);
+        
     }
 
     /**
@@ -206,6 +225,10 @@ contract BetOnChain is Ownable {
     function getOddsForTeam2(uint256 betId) view external returns (uint256) {
         return bets[betId].oddsfor2;
     }
+    
+    function getOddsForDraw(uint256 betId) view external returns (uint256) {
+        return bets[betId].oddsfor0;
+    }
 
     /**
      * @notice  Requests match results
@@ -214,9 +237,11 @@ contract BetOnChain is Ownable {
      * @param   jobId  The ID of the job to be used to request the match results.
      * @param   betId   Unique identifier of the bet
      */
-    function callResults(address oracle, string memory jobId, uint256 betId) external whenBetsClosed(betId) {
+     function callResults(address oracle, string memory jobId, uint256 betId) external whenBetsClosed(betId) {
         consumerContract.requestMatchResult(oracle, jobId, betId);
+        bets[betId].winnerCalled = true;
     }
+
 
     /**
      * @notice  Get bet winning team.
@@ -314,14 +339,17 @@ contract BetOnChain is Ownable {
         return achievementRequirement;
     }
 
+
     /**
      * @dev     Internal function. Mints a new Bet On Chain NFT and assigns it to the sender's address.
      * @return  uint256  The ID of the newly minted NFT.
      */
+
     function _mintBetPosition() internal returns (uint256) {
         uint256 nftId = bocNFT.getCurrentId();
         bocNFT.safeMint(msg.sender, betPositionURI);
         return nftId;
+
     }
 
    /**
@@ -350,19 +378,27 @@ contract BetOnChain is Ownable {
     * @param _betFor The team that the bet was placed for (either 1 or 2).
     */
 
-    function _updateBetInfo(uint256 _betAmount, uint256 _betId, uint256 _betFor) internal {
+     function _updateBetInfo(uint256 _betAmount, uint256 _betId, uint256 _betFor) internal {
         if (_betFor == 1) {
             bets[_betId].totalBetAmountFor1 += _betAmount;
-        } else {
+        } 
+        if (_betFor == 2) {
             bets[_betId].totalBetAmountFor2 += _betAmount;
+        } 
+        if (_betFor == 0)
+        {
+            bets[_betId].totalBetAmountFor0 += _betAmount;
         }
         bets[_betId].totalBetAmount += _betAmount; 
         uint256 totalBetAmountFor1 = bets[_betId].totalBetAmountFor1;
         uint256 totalBetAmountFor2 = bets[_betId].totalBetAmountFor2;
-        uint256 oddsFor2 =  (totalBetAmountFor1 * 10000 / totalBetAmountFor2) + 10000;
+        uint256 totalBetAmountFor0 = bets[_betId].totalBetAmountFor0;
+        uint256 oddsFor2 =  ((totalBetAmountFor1 + totalBetAmountFor0) * 10000 / totalBetAmountFor2) + 10000;
         bets[_betId].oddsfor2 = oddsFor2;
-        uint256 oddsFor1 =  (totalBetAmountFor2 * 10000 / totalBetAmountFor1) + 10000;
+        uint256 oddsFor1 =  ((totalBetAmountFor2 + totalBetAmountFor0) * 10000 / totalBetAmountFor1) + 10000;
         bets[_betId].oddsfor1 = oddsFor1;
+        uint256 oddsFor0 =  ((totalBetAmountFor2 + totalBetAmountFor1) * 10000 / totalBetAmountFor0) + 10000;
+        bets[_betId].oddsfor0 = oddsFor0;
     }
 
    /**
@@ -370,6 +406,7 @@ contract BetOnChain is Ownable {
     * @dev     The caller must own the NFT associated with the given bet, otherwise the function will revert.
     * @param   _betId  Unique identifier of the bet.
     */
+
     function _burnNft(uint256 _betId) internal {
         uint256 nftId = addressToBetToPlayer[msg.sender][_betId].nftId;
         if(bocNFT.ownerOf(nftId) != msg.sender) {
@@ -385,6 +422,7 @@ contract BetOnChain is Ownable {
    * @param   _winner The winner of the bet (1 for "for1", 2 for "for2").
    * @return  uint256 The prize amount, in wei.
    */
+
     function _calculatePrizeToWithdraw(uint256 _betId, uint256 _winner) view internal returns (uint256) {
         uint256 betAmount = addressToBetToPlayer[msg.sender][_betId].betAmount;
         uint256 odds;
@@ -393,9 +431,11 @@ contract BetOnChain is Ownable {
         } else if (_winner == 2) {
             odds = bets[_betId].oddsfor2;
         } else {
-            revert BetOnChain__ThereIsNoWinnerOrWinnerNotSet();
-        }
-        uint256 prize = (betAmount * odds) / 10000 - 1*10**18;
+
+            odds = bets[_betId].oddsfor0;
+        } 
+        uint256 prize = (betAmount * odds) / 10000 - 2*10**18;
+
         return prize;
     }
 
@@ -405,3 +445,5 @@ contract BetOnChain is Ownable {
     }
 
 }
+
+
