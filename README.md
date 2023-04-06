@@ -34,7 +34,11 @@ https://www.football-data.org/
  
   BetOnChain.ts, ExchangeToken.ts
   
- * We have created a front end
+ * We have created a front end:
+
+![image](https://user-images.githubusercontent.com/92883939/230429012-81637f1d-d36b-4d45-86d7-84e9ee7dec94.png)
+
+![image](https://user-images.githubusercontent.com/92883939/230429141-0f011b68-49b2-4f40-9bb6-8cde81cf86d7.png)
 
 A diagram of the Solidity contracts interaction can be found below:
 
