@@ -404,8 +404,8 @@ const Card = () => {
           <br />
 
           <form className={styles.cardActions} onSubmit={handleBet} >
-            <input placeholder="Bet ID" className={styles.buttonA} value={betId} />
-              {/* (e) => setBetId(e.target.value)} /> */}
+            <input placeholder="Bet ID" className={styles.buttonA} value={betId} onChange={(e) => setBetId(e.target.value)} />
+              
             <select className={styles.buttonA} value={betFor} onChange={(e) => setBetFor(e.target.value)}>
               <option value=""></option>
               <option value="1">Team 1</option>
