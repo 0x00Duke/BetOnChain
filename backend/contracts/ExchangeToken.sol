@@ -10,7 +10,7 @@ error ExchangeToken__EthTransferFailed();
 
 contract ExchangeToken is Ownable {
 
-    uint256 INITIAL_ETH_FUNDING = 1 ether;
+    uint256 INITIAL_ETH_FUNDING = 0.1 ether;
     BocToken public betToken;
 
     constructor(uint256 initialTokenAmount) payable {

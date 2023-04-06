@@ -11,15 +11,13 @@ import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
 
-    ///@param ORACLE_PAYMENT is the amount of link token that this contract should have in order to send it with a request
-    uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10; 
-    ///@param homeGoal is the number of goals for the home team 
+
+
+    uint256 private constant ORACLE_PAYMENT = 1 * LINK_DIVISIBILITY / 10;
     uint256 public homeGoal;
-    ///@param awayGoal is the number of goals for the away team
     uint256 public awayGoal;
-    ///@param matchName is team 1 vs team 2 names
     string public matchName; 
-    ///@param matchWinner is a mapping from the fixtureId of the API to the result computed on the external adapter. 0 for no winner, 1 if the winner is home team and 2 if the winner is away team
+
     mapping(uint256 => uint256) public matchWinner;
 
     event RequestForInfoFulfilled(
@@ -32,7 +30,7 @@ contract ConsumerContract is ChainlinkClient, ConfirmedOwner {
     constructor() ConfirmedOwner(msg.sender) {
         setChainlinkToken(0x779877A7B0D9E8603169DdbD7836e478b4624789);
     }
-
+    
     ///@notice We have to give the address of the oracle, the custom jobId and the fixtureId for the API
     function requestMatchResult(
         address _oracle,
