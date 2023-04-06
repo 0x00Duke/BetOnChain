@@ -21,10 +21,10 @@ export default function Profile() {
       Profile
       {isDefinitelyConnected ? (
         <>
-          <NftGallery walletAddress={address} collectionAddress={"0xff573458aa954B1d83d01d8343362A4795e256C7"} chain={"sepolia"}/>
-          <NftMinter contractAddress={"0x0dd5df115e8cc9a0d2adf2c200ef5e476bbbb3a6"} tokenUri="" abi={bocJson.abi} achievementLevel={0}/> 
-          <NftMinter contractAddress={"0x0dd5df115e8cc9a0d2adf2c200ef5e476bbbb3a6"} tokenUri="" abi={bocJson.abi} achievementLevel={1}/> 
-          <NftMinter contractAddress={"0x0dd5df115e8cc9a0d2adf2c200ef5e476bbbb3a6"} tokenUri="" abi={bocJson.abi} achievementLevel={2}/> 
+          <NftGallery walletAddress={address} collectionAddress={"0x9749E40D042BC1fC521C343453bf77d8Af0Aa838"} chain={"sepolia"}/>
+          <NftMinter contractAddress={"0x400483e30faf9a819d2488ae485A0Fc1b571116e"} tokenUri="" abi={bocJson.abi} achievementLevel={0}/> 
+          <NftMinter contractAddress={"0x400483e30faf9a819d2488ae485A0Fc1b571116e"} tokenUri="" abi={bocJson.abi} achievementLevel={1}/> 
+          <NftMinter contractAddress={"0x400483e30faf9a819d2488ae485A0Fc1b571116e"} tokenUri="" abi={bocJson.abi} achievementLevel={2}/> 
         </>
       ) : <h3>You should connect your wallet !</h3>}
     </div>

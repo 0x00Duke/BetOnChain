@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <div className={styles.home}>
       <div className={styles.todayLiveMatches}>
-        <MatchesCard />
+        {/* <MatchesCard /> */}
         <Card />
-        <BetSlip />
+        {/* <BetSlip /> */}
         {/* <LineupCard /> */}
       </div>
     </div>

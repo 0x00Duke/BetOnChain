@@ -11,6 +11,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import styles from '../styles/Exchange.module.css';
 
+
 export default function Exchange() {
   const [isDefinitelyConnected, setIsDefinitelyConnected] = useState(false);
   const { address, isConnected, isDisconnected } = useAccount();
@@ -81,7 +82,7 @@ export default function Exchange() {
           tokenAddress,
           tokenABI,
           signer
-        ))
+        ));
       } catch (error) {
         console.log(error)
       }
@@ -91,6 +92,7 @@ export default function Exchange() {
     }
     initContract();
   }, []);
+
 
 
 
@@ -177,6 +179,7 @@ export default function Exchange() {
             Withdraw BOC Token
           </button>
         </form>
+
       </TabPanel>
     </TabContext>
   );

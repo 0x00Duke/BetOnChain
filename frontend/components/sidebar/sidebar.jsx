@@ -49,7 +49,7 @@ const Sidebar = ({ toggler, closeNav }) => {
               <li>
                 <CurrencyExchange className={styles.icon} />
                 <span>
-                  Exchange
+                  BOC Token Exchange
                 </span>
               </li>
             </Link>
@@ -70,7 +70,7 @@ const Sidebar = ({ toggler, closeNav }) => {
               <li>
                 <AccountCircle className={styles.icon} />
                 <span>
-                  Profile
+                  Achievement NFTs
                 </span>
               </li>
             </Link>

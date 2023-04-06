@@ -270,8 +270,8 @@
 .card .cardActions button {
   outline: none;
   border: none;
-  position: absolute;
-  bottom: -61px;
+  /* position: absolute; */
+  /* bottom: -61px; */
   font-size: 14px;
   font-weight: 600;
   background-color: #0000B2;
@@ -281,6 +281,14 @@
   cursor: pointer;
   padding: 8px 41px;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.buttonA {
+  margin: 5px;
+}
+
+.cardActions input {
+  width: 120px;
 }
 
 .card .cardActions button:hover {
