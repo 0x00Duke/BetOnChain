@@ -20,7 +20,7 @@ Of course, inputs from external sources are needed in order to have our betting 
 
  * We are using the following API to get the names of the Teams playing, the odds and the name of the winner:
  
-  https://www.sportmonks.com/football-api/  
+https://www.football-data.org/
    
  * From the backend, for efficency purposes, we are calling several data points (TBA) from the API to show them on the frontend 
  
@@ -38,7 +38,7 @@ Of course, inputs from external sources are needed in order to have our betting 
 
 A diagram of the Solidity contracts interaction can be found below:
 
-![image](https://user-images.githubusercontent.com/92883939/229354382-2cb964b9-2303-48f5-949f-00404ac45de2.png)
+![image](https://user-images.githubusercontent.com/92883939/230427715-b1d4e5cb-219b-45d4-a4f2-d6a3e727890c.png)
 
   What is the process?
   
