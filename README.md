@@ -2,7 +2,7 @@
 
 **Introduction**
 
-With the World Cup which just ended a couple of months ago, it is interesting to have a look at the sports/esports betting market. It is a very large one: More than 75 Billion dollars according to a _grandviewresearch_ study (https://www.grandviewresearch.com/industry-analysis/sports-betting-market-report). Such a market is sometimes considered to be manipulated, not very transparent, etc. and deposited funds cannot always be withdrawn. The blockchain, with its unique technology, can add transparency into this market and hence, make it more efficient. Besides, users, by managing their private keys, are the sole owners of the funds.
+With the World Cup which just ended a couple of months ago, it is interesting to have a look at the sports/esports betting market. It is a very large one: More than 75 Billion dollars according to a grandviewresearch_ study (https://www.grandviewresearch.com/industry-analysis/sports-betting-market-report). Such a market is sometimes considered to be manipulated, not very transparent, etc. and deposited funds cannot always be withdrawn. The blockchain, with its unique technology, can add transparency into this market and hence, make it more efficient. Besides, users, by managing their private keys, are the sole owners of the funds.
 
 **Our idea**
 
@@ -46,12 +46,26 @@ A diagram of the Solidity contracts interaction can be found below:
 
   What is the process?
   
-  1. From the constructor, we mint the inital supply of the BetOnChain Token (BocToken) based on an initial number of ETH
+  1. We deploy the ExchangeToken contract. That creates our token (BocToken) and allows a user to exchange an initial amount of ETH for the Boc token
   
-  2. The user can then bet. A NFT is minted for the bet
+  2. Then we deploy the BetOnChain contract. That creates an NFT as well as the consumer contract
   
-  3. If the user has done a bet, then an achievement NFT is minted
-
+  3. We need to fund the customer contract with LINK tokens
+  
+  4. Then we need to run a Chainlink node to get the result of the games (winner) from the ConsumerContract.sol
+  
+  5. The backend provides information like the names of the Teams, the odds (to be checked)
+  
+  6. Then the user can trigger a bet from the frontend
+  
+  7. Once the game is finished, the name of the winner is provided by the Chainlink oracle and the user (having triggered a bet) gets a NFT
+  
+  8. Depending on the number of bets triggered, there are different levels of achievements (beginner, warrior and expert). These levels can be set up by the owner of the BetOnChain contract
+  
+  9. A winner gets the amount bet + the prize of the bet (which depends on the odds)
+  
+  10. A person who did not win looses the amount bet (betAmount)
+  
 **Challenges we have encountered**
 
  * Finding the right API
